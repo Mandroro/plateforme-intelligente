@@ -1,6 +1,5 @@
 import React from "react";
 import HeroImage from "./../../assets/image-AI.png";
-import ListImage from "./../../assets/image-3D-List.png";
 
 export default function Hero() {
   return (
