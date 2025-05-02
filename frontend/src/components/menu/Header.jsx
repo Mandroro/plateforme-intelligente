@@ -1,49 +1,51 @@
+import { CircleUserRound, Lock, LogIn, User } from "lucide-react";
 import React from "react";
 
 export default function Header() {
   return (
-    <header className="bg-gray-900">
+    <header className="bg-gray-950">
       <div className="container mx-auto flex items-center justify-between p-3">
-        <div className="flex items-center space-x-25">
-          <h1 className="text-white text-xl font-[Sora] font-bold">SmartHub</h1>
-          <nav className="hidden md:flex">
-            <ul className="flex space-x-6">
-              <li>
-                <a href="#" className="text-white font-[Sora] hover:text-green-500">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white font-[Sora] hover:text-green-500">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white font-[Sora] hover:text-green-500">
-                  Services
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <a href="#" className="text-white text-2xl font-[Sora] font-bold">
+          JobRemote
+        </a>
+        {/* <nav className="hidden md:flex">
+          <ul className="flex space-x-6">
+          <li>
+              <a
+                href="#"
+                className="text-white font-[Sora] font-bold hover:text-blue-600"
+              >
+                Accueil
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-white font-[Sora] font-bold hover:text-blue-600"
+              >
+                Offres
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-white font-[Sora] font-bold hover:text-blue-600"
+              >
+                A propos
+              </a>
+            </li>
+          </ul>
+        </nav> */}
         <div className="hidden md:flex space-x-2">
-          <button className="text-white font-[Sora] py-2 px-4 rounded-2xl">
-            Sign in
+          <button className="text-white hover:text-gray-900 font-[Sora] hover:bg-gray-200 font-light p-2 rounded-md flex items-center justify-center">
+            <Lock className="mr-2 text-whit"/>
+            Connexion
           </button>
-          <button className="border border-green-600 text-white font-[Sora] py-2 px-4 rounded-2xl">
-            Sign up
+          <button className="text-white bg-blue-600 font-[Sora] font-light p-2 rounded-md flex items-center justify-center">
+            Inscription
           </button>
-        </div>
-
-        {/* Mobile button */}
-        <div className="md:hidden">
-          <button className="text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
-            <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-              <path
-                fillRule="evenodd"
-                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
-              />
-            </svg>
+          <button className="text-white bg-green-700 font-[Sora] font-light p-2 rounded-md flex items-center justify-center">
+            Espace recruteur
           </button>
         </div>
       </div>

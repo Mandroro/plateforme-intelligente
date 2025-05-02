@@ -1,35 +1,91 @@
 import React from "react";
-import HeroImage from "./../../assets/image-AI.png";
+import {
+  BriefcaseBusiness,
+  House,
+  MapPin,
+  Search,
+  User,
+} from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="py-25">
-      <div className="container mx-auto p-8">
-        <div className="grid grid-cols-3">
-          <div className="col-span-2 text-left">
-            <p className="text-white text-base/14 font-[Sora] font-bold text-[50px] mb-3">
-              Discovering the best{" "}
-              <span className="text-green-500">Freelancers</span> and{" "}
-              <span className="text-green-500">Remote Jobs</span>
+    <section className="bg-gray-900 py-25">
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-6 mb-20">
+          <div className="col-start-1 col-end-7 text-center">
+            <p className="text-white text-base/14 font-[Sora] font-light text-[50px] mb-14">
+              Plongez dans le monde des offres d'emploi flexibles
+              et à distance.
             </p>
-            <p className="text-white text-base/8 font-[Sora] font-thin text-[20px] mb-5">
-              Unlock your potential and grow your business! Our platform offers
-              freelancers the tools to expand their network and access promising
-              projects. For companies, this is an opportunity to find agile and
-              competent talent to drive their growth. Don't wait any longer,
-              sign up and explore a world of possibilities!
-            </p>
-            <button className="border border-green-600 text-white font-[Sora] rounded-full p-3 w-1/5 mr-2">
-              Let's started
-            </button>
-            <button className="border border-green-600 text-white font-[Sora] rounded-full p-3 w-1/5">
-              About
-            </button>
           </div>
-          <div className="absolute z-1 top-28 right-4">
-            <img src={HeroImage} className="w-[70%]" />
+          <div className="col-start-2 col-end-6">
+            <div className="flex">
+              <div className="relative flex items-center w-full mr-2">
+                <BriefcaseBusiness className="absolute left-4 text-gray-500" />
+                <input
+                  className="w-full bg-white border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
+                  placeholder="Je recherche"
+                />
+              </div>
+              <div className="relative flex items-center w-full mr-2">
+                <MapPin className="absolute left-4 text-gray-500" />
+                <input
+                  className="w-full bg-white border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
+                  placeholder="Ville, Région"
+                />
+              </div>
+              <button
+                type="button"
+                className="bg-gray-700 text-white font-[Sora] font-light rounded-md p-3 cursor-pointer"
+              >
+                <Search className="size-8" />
+              </button>
+            </div>
           </div>
         </div>
+        <div className="flex items-center justify-center">
+            <div className="flex space-x-20">
+              <div className="flex items-center">
+                <div className="bg-purple-900 p-3 rounded-full">
+                  <BriefcaseBusiness className="text-white size-7" />
+                </div>
+                <div className="ml-2">
+                  <h5 className="text-white text-[30px] font-[Sora] font-light leading-none">
+                    100
+                  </h5>
+                  <h6 className="text-[16px] font-[Sora] font-light text-white">
+                    Missions
+                  </h6>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <div className="bg-red-900 p-3 rounded-full">
+                  <User className="text-white size-7" />
+                </div>
+                <div className="ml-2">
+                  <h5 className="text-white text-[30px] font-[Sora] font-bold leading-none">
+                    100
+                  </h5>
+                  <h6 className="text-[16px] font-[Sora] font-light text-gray-300">
+                    Freelancers
+                  </h6>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <div className="bg-orange-700 p-3 rounded-full">
+                  <House className="text-white size-7" />
+                </div>
+                <div className="ml-2">
+                  <h5 className="text-white text-[30px] font-[Sora] font-bold leading-none">
+                    100
+                  </h5>
+                  <h6 className="text-[16px] font-[Sora] font-light text-gray-300">
+                    Entreprises
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     </section>
   );
