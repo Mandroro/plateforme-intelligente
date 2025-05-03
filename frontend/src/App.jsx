@@ -1,19 +1,19 @@
 import React from "react";
-import Header from "./components/menu/Header";
-import Hero from "./components/site/Hero";
-import About from "./components/site/About";
-import Footer from "./components/menu/Footer";
-import Offre from "./components/site/Offre";
+import { BrowserRouter, Route, Routes } from "react-router";
+import SiteFreelancer from "./components/page/SiteFreelancer";
+import PageInscription from "./components/page/PageInscription";
+import PageAuthentification from "./components/page/PageAuthentification";
 
 function App() {
   return (
-    <>
-      <Header/>
-      <Hero/>
-      <About/>
-      <Offre/>
-      <Footer/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SiteFreelancer />} />
+        <Route path="/inscription" element={<PageInscription/>} />
+        <Route path="/espace-recruteur" element={"Page recruteur"} />
+        <Route path="/authentification" element={<PageAuthentification/>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

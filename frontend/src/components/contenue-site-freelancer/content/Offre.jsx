@@ -1,14 +1,14 @@
 import { ArrowRight, MapPin } from "lucide-react";
 import React from "react";
-import Logo1 from "./../../assets/exemple-logo-societe/archetype-consulting.jpeg";
-import Logo2 from "./../../assets/exemple-logo-societe/ciec-group.jpeg";
-import Logo3 from "./../../assets/exemple-logo-societe/circuit.jpeg";
-import Logo4 from "./../../assets/exemple-logo-societe/confluence.jpeg";
-import Logo5 from "./../../assets/exemple-logo-societe/eci-ingenierie.jpeg";
-import Logo6 from "./../../assets/exemple-logo-societe/felixe.jpeg";
-import Logo7 from "./../../assets/exemple-logo-societe/holateams.jpeg";
-import Logo8 from "./../../assets/exemple-logo-societe/pixoshare.jpeg";
-import Logo9 from "./../../assets/exemple-logo-societe/Valsoft.jpeg";
+import Logo1 from "./../images/exemple-logo-societe/archetype-consulting.jpeg";
+import Logo2 from "./../images/exemple-logo-societe/ciec-group.jpeg";
+import Logo3 from "./../images/exemple-logo-societe/circuit.jpeg";
+import Logo4 from "./../images/exemple-logo-societe/confluence.jpeg";
+import Logo5 from "./../images/exemple-logo-societe/eci-ingenierie.jpeg";
+import Logo6 from "./../images/exemple-logo-societe/felixe.jpeg";
+import Logo7 from "./../images/exemple-logo-societe/holateams.jpeg";
+import Logo8 from "./../images/exemple-logo-societe/pixoshare.jpeg";
+import Logo9 from "./../images/exemple-logo-societe/Valsoft.jpeg";
 
 export default function Offre() {
   const listeOffre = [
