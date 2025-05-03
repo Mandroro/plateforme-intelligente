@@ -48,14 +48,14 @@ export default function Header() {
           </ul>
         </nav> */}
         <div className="hidden md:flex space-x-2">
-          <button onClick={connexion} className="text-white hover:text-gray-900 font-[Sora] hover:bg-gray-200 font-light p-2 rounded-md flex items-center justify-center cursor-pointer">
+          <button onClick={connexion} className="text-white hover:text-gray-900 font-[Sora] hover:bg-gray-200 font-light text-[14px] p-2 rounded-md flex items-center justify-center cursor-pointer">
             <Lock className="mr-2"/>
             Connexion
           </button>
-          <button onClick={inscription} className="text-white bg-blue-600 font-[Sora] font-light p-2 rounded-md flex items-center justify-center cursor-pointer">
+          <button onClick={inscription} className="text-white bg-blue-600 font-[Sora] font-light text-[14px] p-2 rounded-md flex items-center justify-center cursor-pointer">
             Inscription
           </button>
-          <button onClick={espaceRecruteur} className="text-white bg-green-700 font-[Sora] font-light p-2 rounded-md flex items-center justify-center cursor-pointer">
+          <button onClick={espaceRecruteur} className="text-white bg-green-700 font-[Sora] font-light text-[14px] p-2 rounded-md flex items-center justify-center cursor-pointer">
             Espace recruteur
           </button>
         </div>
