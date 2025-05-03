@@ -12,9 +12,9 @@ export default function PageAuthentification() {
   };
 
   return (
-    <div className="py-8">
-      <div className="container mx-auto p-8">
-        <div className="grid grid-cols-6 space-x-0">
+    <div className="py-18 md:py-8">
+      <div className="container mx-auto p-6">
+        <div className="grid grid-cols-1 md:grid-cols-6 space-x-0">
           <div className="bg-white col-start-3 col-end-5 p-8 rounded-md">
             <div className="text-center py-8 mb-8">
               <h1 className="text-gray-900 font-[Sora] font-bold text-[40px]">
