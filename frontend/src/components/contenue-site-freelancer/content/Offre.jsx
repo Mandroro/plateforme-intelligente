@@ -72,16 +72,19 @@ export default function Offre() {
     <section className="bg-gray-900 py-8">
       <div className="container mx-auto p-8">
         <div className="text-center mb-10">
-          <h1 className="text-white font-[Sora] font-bold text-[30px]">
-            Découvrez les offres publié dernièrement
+          <h1 className="text-white font-[Sora] font-bold text-[22px] md:text-[30px]">
+            Offres publié dernièrement
           </h1>
         </div>
-        <div class="grid grid-cols-6 gap-4 mb-8">
+        <div class="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
           {listeOffre.map((l) => (
-            <div class="bg-gray-950 col-start-2 col-end-6 flex p-5">
-              <img src={l.image} className="rounded-md w-1/6 mr-6" />
+            <div class="bg-gray-950 col-start-1 md:col-start-2 col-end-7 md:col-end-6 flex p-5">
+              <img src={l.image} className="hidden md:flex rounded-md w-1/6 mr-6" />
               <div className="leading-8">
                 <h1 className="text-white font-[Sora] font-bold text-[19px]">
+                  {l.nom}
+                </h1>
+                <h1 className="text-white font-[Sora] font-thin text-[19px]">
                   {l.poste}
                 </h1>
                 <p className="flex items-center text-white font-[Sora] font-thin text-[15px] ">
