@@ -14,7 +14,7 @@ export default function About() {
               JobRemote:
             </p>
             <p className="text-white font-[Sora] font-light text-[21px] md:text-[30px] leading-9 mb-3">
-              Portail de recrutement qui utilise de l'Intelligence Artificielle
+              Portail de recrutement de travail à distance
             </p>
             <p className="text-white text-justify font-[Sora] font-thin text-[16px] mb-4">
               Propulsée par une intelligence artificielle de pointe,{" "}

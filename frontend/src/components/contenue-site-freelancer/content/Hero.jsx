@@ -3,7 +3,7 @@ import { BriefcaseBusiness, House, MapPin, Search, User } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="bg-gray-900 py-12 md:py-25">
+    <section className="bg-gray-900 py-25 md:py-45">
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-6 mb-10 md:mb-20">
           <div className="col-start-1 col-end-7 text-center">

@@ -26,10 +26,10 @@ export default function PageAuthentification() {
             </div>
             <div className="space-y-2 mb-8">
               <div className="relative flex items-center w-full mr-2">
-                <User className="absolute left-4 text-gray-500" />
+                <AtSign className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
-                  placeholder="Entrer un pseudo"
+                  placeholder="Entrer votre adresse email"
                 />
               </div>
               <div className="relative flex items-center w-full mr-2">

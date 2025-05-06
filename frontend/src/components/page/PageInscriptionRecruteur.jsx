@@ -1,11 +1,11 @@
-import { AtSign, LockKeyhole, MoveLeft, User } from "lucide-react";
+import { AtSign, LockKeyhole, User } from "lucide-react";
 import React from "react";
-import { NavLink, useNavigate } from "react-router";
-export default function PageInscription() {
+import { useNavigate } from "react-router";
+export default function PageInscriptionRecruteur() {
   const redirection = useNavigate();
 
   const retourPageAccueil = () => {
-    redirection("/");
+    redirection("/espace-recruteur");
   };
   const creerCompte = () => {
     console.log("Fonctionnalité non disponible !!");
@@ -21,7 +21,7 @@ export default function PageInscription() {
                 Job<span className="text-green-600">Remote</span>
               </h1>
               <p className="text-gray-300 font-[Sora] font-light text-[14px]">
-                Créez un compte en tant que Freelancer.
+                Créez un compte en tant que Recruteur.
               </p>
             </div>
             <div className="space-y-2 mb-4">

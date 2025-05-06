@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router";
 export default function Header() {
   const redirection = useNavigate();
   const connexion = () => {
-    redirection("/authentification");
+    redirection("authentification");
   };
   const inscription = () => {
     redirection("/inscription");
@@ -14,7 +14,7 @@ export default function Header() {
     redirection("/espace-recruteur");
   };
   return (
-    <header>
+    <header className="fixed top-0 left-0 right-0 bg-gray-950 z-50">
       <div className="container mx-auto flex items-center justify-between p-3">
         <NavLink
           to="/"
