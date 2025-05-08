@@ -1,4 +1,4 @@
-import { AtSign, LockKeyhole, MoveLeft, User } from "lucide-react";
+import { AtSign, Cog, LockKeyhole, Mail, MoveLeft, User } from "lucide-react";
 import React from "react";
 import { NavLink, useNavigate } from "react-router";
 export default function PageInscription() {
@@ -21,10 +21,18 @@ export default function PageInscription() {
                 Job<span className="text-green-600">Remote</span>
               </h1>
               <p className="text-gray-300 font-[Sora] font-light text-[14px]">
-                Créez un compte en tant que Freelancer.
+                Créez un compte en tant que Freelancer ou Recruteur.
               </p>
             </div>
             <div className="space-y-2 mb-4">
+            <div className="relative flex items-center w-full mr-2">
+                <Cog className="absolute left-4 text-gray-500" />
+                <select className="w-full bg-gray-200  border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none">
+                  <option className="text-gray-500">Type de compte</option>
+                  <option>Freelancer</option>
+                  <option>Recruteur</option>
+                </select>
+              </div>
               <div className="relative flex items-center w-full mr-2">
                 <User className="absolute left-4 text-gray-500" />
                 <input
@@ -33,7 +41,7 @@ export default function PageInscription() {
                 />
               </div>
               <div className="relative flex items-center w-full mr-2">
-                <AtSign className="absolute left-4 text-gray-500" />
+                <Mail className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer un adresse email"
