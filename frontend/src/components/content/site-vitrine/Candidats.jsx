@@ -1,88 +1,71 @@
-import { ArrowRight, BriefcaseBusiness, MapPin, Search } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Globe,
+  Mail,
+  MapPin,
+  Search,
+} from "lucide-react";
 import React, { useState } from "react";
-import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
-import Logo2 from "./../../images/exemple-logo-societe/ciec-group.jpeg";
-import Logo3 from "./../../images/exemple-logo-societe/circuit.jpeg";
-import Logo4 from "./../../images/exemple-logo-societe/confluence.jpeg";
-import Logo5 from "./../../images/exemple-logo-societe/eci-ingenierie.jpeg";
-import Logo6 from "./../../images/exemple-logo-societe/felixe.jpeg";
-import Logo7 from "./../../images/exemple-logo-societe/holateams.jpeg";
-import Logo8 from "./../../images/exemple-logo-societe/pixoshare.jpeg";
-import Logo9 from "./../../images/exemple-logo-societe/Valsoft.jpeg";
+import Profil1 from "./../../images/exemple-profil-candidat/1.png";
+import Profil2 from "./../../images/exemple-profil-candidat/2.jpeg";
+import Profil3 from "./../../images/exemple-profil-candidat/3.jpeg";
+import Profil4 from "./../../images/exemple-profil-candidat/4.jpeg";
+import Profil5 from "./../../images/exemple-profil-candidat/5.jpeg";
+import Profil6 from "./../../images/exemple-profil-candidat/6.jpeg";
+import Profil7 from "./../../images/exemple-profil-candidat/7.jpg";
+import Profil8 from "./../../images/exemple-profil-candidat/8.jpeg";
 
 export default function Candidats() {
   const listeOffre = [
     {
-      image: Logo1,
-      nom: "Archetype Consulting",
-      poste: "Developpeur ReactJs/NextJs",
+      image: Profil1,
+      nom: "Jean-Jacques Maurice",
+      poste: "Developpeur ReactJs/Laravel",
       lieu: "Paris, France",
     },
     {
-      image: Logo2,
-      nom: "Ciec Group",
-      poste: "Developpeur ReactJs/NextJs",
+      image: Profil2,
+      nom: "Jong Lee",
+      poste: "Developpeur Java",
+      lieu: "Hong Kong, Chine",
+    },
+    {
+      image: Profil3,
+      nom: "Morris Johnson",
+      poste: "Developpeur Fullstack JavaScript",
       lieu: "Paris, France",
     },
     {
-      image: Logo3,
-      nom: "Circuit",
-      poste: "Developpeur ReactJs/NextJs",
+      image: Profil4,
+      nom: "Mélanie Janette",
+      poste: "Testeur QA",
       lieu: "Paris, France",
     },
     {
-      image: Logo4,
-      nom: "Confluence",
-      poste: "Developpeur ReactJs/NextJs",
+      image: Profil5,
+      nom: "Muriella Kevin",
+      poste: "Administration de Ressource Humaines",
       lieu: "Paris, France",
     },
     {
-      image: Logo5,
-      nom: "ECI Ingénierie",
-      poste: "Developpeur ReactJs/NextJs",
+      image: Profil6,
+      nom: "Johane Mariannah",
+      poste: "Marketing Digital",
       lieu: "Paris, France",
     },
     {
-      image: Logo6,
-      nom: "Felixe",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo7,
-      nom: "Holateams",
+      image: Profil7,
+      nom: "Joséa Margaritta",
       poste: "Developpeur Frontend ReactJs",
       lieu: "Paris, France",
     },
     {
-      image: Logo8,
-      nom: "Pixoshare",
-      poste: "Developpeur Backend JAVA",
+      image: Profil8,
+      nom: "Joackim Marcus Evan",
+      poste: "Data Engineer",
       lieu: "Allemagne",
-    },
-    {
-      image: Logo9,
-      nom: "Valsoft",
-      poste: "Developpeur FullStack ReactJs/NextJs - Python",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo1,
-      nom: "Autre Entreprise 1",
-      poste: "Poste 1",
-      lieu: "Lieu 1",
-    },
-    {
-      image: Logo2,
-      nom: "Autre Entreprise 2",
-      poste: "Poste 2",
-      lieu: "Lieu 2",
-    },
-    {
-      image: Logo3,
-      nom: "Autre Entreprise 3",
-      poste: "Poste 3",
-      lieu: "Lieu 3",
     },
   ];
 
@@ -143,19 +126,27 @@ export default function Candidats() {
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
           {offresToShow.map((l, index) => (
-            <div key={index} className="bg-gray-950 col-span-3 flex p-5 rounded-md">
+            <div
+              key={index}
+              className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
+            >
               <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
               />
               <div className="leading-8">
-                <h1 className="text-white font-[Sora] font-bold text-[19px]">
+                <h1 className="text-white font-[Sora] font-bold text-[19px] mb-1">
                   {l.nom}
                 </h1>
-                <h1 className="text-white font-[Sora] font-thin text-[19px]">
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  {/* <BriefcaseBusiness className="mr-2" /> */}
                   {l.poste}
-                </h1>
-                <p className="flex items-center text-white font-[Sora] font-thin text-[15px] ">
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  <Mail className="mr-2"/>
+                  example@gmail.com
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   <MapPin className="mr-2" />
                   {l.lieu}
                 </p>
@@ -178,19 +169,21 @@ export default function Candidats() {
             >
               Précédent
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
-                  currentPage === pageNumber
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-800 text-white hover:bg-gray-700 cursor-pointer"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
+                    currentPage === pageNumber
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-800 text-white hover:bg-gray-700 cursor-pointer"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              )
+            )}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}

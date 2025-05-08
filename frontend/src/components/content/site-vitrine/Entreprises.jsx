@@ -1,4 +1,4 @@
-import { ArrowRight, BriefcaseBusiness, MapPin, Search } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Globe, MapPin, Search } from "lucide-react";
 import React, { useState } from "react";
 import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 import Logo2 from "./../../images/exemple-logo-societe/ciec-group.jpeg";
@@ -15,75 +15,57 @@ export default function Entreprises() {
     {
       image: Logo1,
       nom: "Archetype Consulting",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Call Center / Entreprise Informatique",
       lieu: "Paris, France",
     },
     {
       image: Logo2,
       nom: "Ciec Group",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Entreprise Informatique",
       lieu: "Paris, France",
     },
     {
       image: Logo3,
       nom: "Circuit",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Call Center",
       lieu: "Paris, France",
     },
     {
       image: Logo4,
       nom: "Confluence",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Call Center",
       lieu: "Paris, France",
     },
     {
       image: Logo5,
       nom: "ECI Ingénierie",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Entreprise de BTP",
       lieu: "Paris, France",
     },
     {
       image: Logo6,
       nom: "Felixe",
-      poste: "Developpeur ReactJs/NextJs",
+      poste: "Entreprise de Marketing Digital",
       lieu: "Paris, France",
     },
     {
       image: Logo7,
       nom: "Holateams",
-      poste: "Developpeur Frontend ReactJs",
+      poste: "Startup informatique",
       lieu: "Paris, France",
     },
     {
       image: Logo8,
       nom: "Pixoshare",
-      poste: "Developpeur Backend JAVA",
+      poste: "Call Center",
       lieu: "Allemagne",
     },
     {
       image: Logo9,
       nom: "Valsoft",
-      poste: "Developpeur FullStack ReactJs/NextJs - Python",
+      poste: "Entreprise informatique",
       lieu: "Paris, France",
-    },
-    {
-      image: Logo1,
-      nom: "Autre Entreprise 1",
-      poste: "Poste 1",
-      lieu: "Lieu 1",
-    },
-    {
-      image: Logo2,
-      nom: "Autre Entreprise 2",
-      poste: "Poste 2",
-      lieu: "Lieu 2",
-    },
-    {
-      image: Logo3,
-      nom: "Autre Entreprise 3",
-      poste: "Poste 3",
-      lieu: "Lieu 3",
-    },
+    }
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -143,7 +125,7 @@ export default function Entreprises() {
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
           {offresToShow.map((l, index) => (
-            <div key={index} className="bg-gray-950 col-span-3 flex p-5 rounded-md">
+            <div key={index} className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer">
               <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
@@ -152,10 +134,15 @@ export default function Entreprises() {
                 <h1 className="text-white font-[Sora] font-bold text-[19px]">
                   {l.nom}
                 </h1>
-                <h1 className="text-white font-[Sora] font-thin text-[19px]">
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  {/* <BriefcaseBusiness className="mr-2"/> */}
                   {l.poste}
-                </h1>
-                <p className="flex items-center text-white font-[Sora] font-thin text-[15px] ">
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  <Globe className="mr-2"/>
+                  siteweb.example.com
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
                   {l.lieu}
                 </p>

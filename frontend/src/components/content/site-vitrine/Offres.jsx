@@ -1,4 +1,4 @@
-import { ArrowRight, BriefcaseBusiness, MapPin, Search } from "lucide-react";
+import { BriefcaseBusiness, CalendarDays, MapPin, Search } from "lucide-react";
 import React, { useState } from "react";
 import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 import Logo2 from "./../../images/exemple-logo-societe/ciec-group.jpeg";
@@ -143,7 +143,7 @@ export default function Offres() {
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
           {offresToShow.map((l, index) => (
-            <div key={index} className="bg-gray-950 col-span-3 flex p-5 rounded-md">
+            <div key={index} className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer">
               <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
@@ -152,10 +152,14 @@ export default function Offres() {
                 <h1 className="text-white font-[Sora] font-bold text-[19px]">
                   {l.nom}
                 </h1>
-                <h1 className="text-white font-[Sora] font-thin text-[19px]">
+                <p className="text-gray-500 font-[Sora] font-light text-[15px]">
                   {l.poste}
-                </h1>
-                <p className="flex items-center text-white font-[Sora] font-thin text-[15px] ">
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  <CalendarDays className="mr-2"/>
+                  5 Mai 2025
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
                   {l.lieu}
                 </p>
