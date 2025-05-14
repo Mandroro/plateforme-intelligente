@@ -8,7 +8,7 @@ export default function PageAuthentification() {
     redirection("/");
   };
   const seConnecter = () => {
-    redirection("/pannel-freelancer");
+    redirection("/pannel-admin");
   };
 
   return (
