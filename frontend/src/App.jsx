@@ -11,9 +11,8 @@ import PannelAdmin from "./components/page/PannelAdmin";
 import Dashboard from "./components/content/panneau-admin/Dashboard";
 import PannelFreelancer from "./components/page/PannelFreelancer";
 import OffresFreelancer from "./components/content/panneau-freelancer/OffresFreelancer";
-import DashoardFreelancer from "./components/content/panneau-freelancer/DashoardFreelancer";
-import ProfilFreelancer from "./components/content/panneau-freelancer/ProfilFreelancer";
 import CompteFreelancer from "./components/content/panneau-freelancer/CompteFreelancer";
+import DashboardFreelancer from "./components/content/panneau-freelancer/DashboardFreelance";
 
 function App() {
   return (
@@ -38,9 +37,8 @@ function App() {
 
         <Route path="/pannel-freelancer" element={<PannelFreelancer />}>
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<DashoardFreelancer />} />
+          <Route path="dashboard" element={<DashboardFreelancer />} />
           <Route path="offres" element={<OffresFreelancer />} />
-          <Route path="profil" element={<ProfilFreelancer/>} />
           <Route path="compte" element={<CompteFreelancer/>} />
         </Route>
       </Routes>
