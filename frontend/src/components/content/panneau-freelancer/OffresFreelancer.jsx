@@ -81,7 +81,7 @@ export default function OffresFreelancer() {
   };
 
   return (
-    <div className="py-2">
+    <div className="p-5">
       <div className="grid grid-cols-6 mb-10 md:mb-8">
         <div className="col-start-1 md:col-start-2 col-end-7 md:col-end-6">
           <div className="md:flex">
