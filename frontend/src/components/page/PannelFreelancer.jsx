@@ -113,25 +113,6 @@ function PannelFreelancer(props) {
             <ListItemText
               primary={
                 <NavLink
-                  to="/pannel-freelancer/profil"
-                  className={({ isActive }) =>
-                    `${getActiveClass({ isActive })}`
-                  }
-                >
-                  <div className="flex items-center justify-left">
-                    <AccountCircleIcon className="mr-4" />
-                    <Typography sx={{ fontFamily: "Sora" }}>Profil</Typography>
-                  </div>
-                </NavLink>
-              }
-            />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText
-              primary={
-                <NavLink
                   to="/pannel-freelancer/compte"
                   className={({ isActive }) =>
                     `${getActiveClass({ isActive })}`
@@ -324,6 +305,7 @@ function PannelFreelancer(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              height: "100%",
               bgcolor: "#030712",
             },
           }}
@@ -336,7 +318,6 @@ function PannelFreelancer(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
