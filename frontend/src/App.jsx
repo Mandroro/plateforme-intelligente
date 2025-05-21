@@ -13,6 +13,10 @@ import PannelFreelancer from "./components/page/PannelFreelancer";
 import OffresFreelancer from "./components/content/panneau-freelancer/OffresFreelancer";
 import CompteFreelancer from "./components/content/panneau-freelancer/CompteFreelancer";
 import DashboardFreelancer from "./components/content/panneau-freelancer/DashboardFreelance";
+import PannelRecruteur from "./components/page/PannelRecruteur";
+import CompteRecruteur from "./components/content/panneau-recruteur/CompteRecruteur";
+import ListeCandidatures from "./components/content/panneau-recruteur/ListeCandidatures";
+import GestionOffres from "./components/content/panneau-recruteur/GestionOffres";
 
 function App() {
   return (
@@ -33,6 +37,10 @@ function App() {
         <Route path="/pannel-admin" element={<PannelAdmin />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="utilisateur" element={null} />
+          <Route path="freelancer" element={null} />
+          <Route path="recruteur" element={null} />
+          <Route path="compte" element={null} />
         </Route>
 
         <Route path="/pannel-freelancer" element={<PannelFreelancer />}>
@@ -40,6 +48,15 @@ function App() {
           <Route path="dashboard" element={<DashboardFreelancer />} />
           <Route path="offres" element={<OffresFreelancer />} />
           <Route path="compte" element={<CompteFreelancer/>} />
+        </Route>
+
+        <Route path="/pannel-recruteur" element={<PannelRecruteur />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={null} />
+          <Route path="freelancer" element={null} />
+          <Route path="offres" element={<GestionOffres/>} />
+          <Route path="candidature" element={<ListeCandidatures/>} />
+          <Route path="compte" element={<CompteRecruteur/>} />
         </Route>
       </Routes>
     </BrowserRouter>
