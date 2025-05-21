@@ -108,7 +108,7 @@ export default function CompteFreelancer() {
           </div>
         </div>
         <div className="text-end">
-          <button className="bg-green-600 hover:bg-green-700 text-white font-[Sora] text-[14px] p-3 rounded-md cursor-pointer">
+          <button className="bg-green-600 hover:bg-green-700 text-white font-[Sora] text-[14px] p-3 rounded-md cursor-pointer w-full md:w-1/4">
             Mettre à jour le mot de passe
           </button>
         </div>
