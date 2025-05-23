@@ -96,27 +96,6 @@ function PannelRecruteur(props) {
             <ListItemText
               primary={
                 <NavLink
-                  to="/pannel-recruteur/freelancer"
-                  className={({ isActive }) =>
-                    `${getActiveClass({ isActive })}`
-                  }
-                >
-                  <div className="flex items-center justify-left">
-                    <PeopleAltIcon className="mr-4" />
-                    <Typography sx={{ fontFamily: "Sora" }}>
-                      Freelancer
-                    </Typography>
-                  </div>
-                </NavLink>
-              }
-            />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText
-              primary={
-                <NavLink
                   to="/pannel-recruteur/offres"
                   className={({ isActive }) =>
                     `${getActiveClass({ isActive })}`
