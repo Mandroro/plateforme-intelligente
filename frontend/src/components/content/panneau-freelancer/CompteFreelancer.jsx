@@ -7,7 +7,7 @@ export default function CompteFreelancer() {
     <>
       <div className="bg-gray-800 p-18 md:p-20 relative mb-12 md:mb-8">
         <div className="absolute top-5 left-4">
-          <img className="rounded-full w-1/2 md:w-1/6" src={Profil1} />
+          <img className="rounded-full w-50" src={Profil1} />
         </div>
       </div>
       <div className="p-8 space-y-2">
