@@ -1,8 +1,18 @@
 import React from "react";
 import Profil1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 import { PenBox } from "lucide-react";
+import InformationProfil from "./modal/InformationProfil";
+import { useState } from "react";
 
 export default function CompteRecruteur() {
+  const [open, setOpen] = useState(false);
+  const ouvrirInformationProfil = () => {
+    setOpen(true);
+  }
+
+  const fermerInformationProfil = () => {
+    setOpen(false);
+  }
   return (
     <>
       <div className="bg-gray-800 p-18 md:p-20 relative mb-18 md:mb-14">
@@ -15,7 +25,7 @@ export default function CompteRecruteur() {
           <h1 className="text-white font-[Sora] text-[20px]">
             Information sur mon profil
           </h1>
-          <button className="p-2 text-white hover:text-gray-500 rounded-md cursor-pointer">
+          <button onClick={ouvrirInformationProfil} className="p-2 text-white hover:text-gray-500 rounded-md cursor-pointer">
             <PenBox />
           </button>
         </div>
@@ -47,7 +57,7 @@ export default function CompteRecruteur() {
             />
           </div>
           <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Adresse actuelle</label>
+            <label className="text-white font-[Sora]">Adresse</label>
             <input
               className="w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
               value="Antananarivo, Madagascar"
@@ -57,7 +67,7 @@ export default function CompteRecruteur() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-6 gap-2 mb-10">
           <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Numéro téléphone</label>
+            <label className="text-white font-[Sora]">Contact</label>
             <input
               className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
               value="0348574101"
@@ -65,7 +75,7 @@ export default function CompteRecruteur() {
             />
           </div>
           <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Adresse email</label>
+            <label className="text-white font-[Sora]">Email</label>
             <input
               className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
               value="example@example.com"
@@ -103,6 +113,9 @@ export default function CompteRecruteur() {
           </button>
         </div>
       </div>
+
+      {/* Formulaire information profil */}
+      <InformationProfil open={open} setOpen={setOpen} fermerInformationProfil={fermerInformationProfil}/>
     </>
   );
 }

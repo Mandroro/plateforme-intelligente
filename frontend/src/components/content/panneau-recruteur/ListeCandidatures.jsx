@@ -7,13 +7,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { ChevronLeft, ChevronRight, PenBox, Search, Trash } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Info,
+  PenBox,
+  Search,
+  Trash,
+} from "lucide-react";
+import { Tooltip } from "@mui/material";
 
 const columns = [
-  { id: "date", label: "Date", minWidth: 5 },
-  { id: "offre", label: "Réf. Offre", minWidth: 5 },
+  { id: "date", label: "Date", minWidth: 100 },
+  { id: "offre", label: "Réf. Offre", minWidth: 100 },
   { id: "candidat", label: "Candidat", minWidth: 100 },
-  { id: "action", label: "Action", minWidth: 5 },
+  { id: "action", label: "", minWidth: 5 },
 ];
 
 function createData(date, offre, candidat, action) {
@@ -25,41 +33,49 @@ const rows = [
     "2025-05-10",
     "DV-JS",
     "Marcus Morris Evan",
-    <>
-      <button className="bg-blue-700 p-2 rounded-md">
-        Détails
-      </button>
-    </>
+    <div>
+      <Tooltip title="Voir les détails">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
+          <Info />
+        </button>
+      </Tooltip>
+    </div>
   ),
-    createData(
+  createData(
     "2025-05-10",
     "DV-JS",
     "Marcus Morris Evan",
-    <>
-      <button className="bg-blue-700 p-2 rounded-md">
-        Détails
-      </button>
-    </>
+    <div>
+      <Tooltip title="Voir les détails">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
+          <Info />
+        </button>
+      </Tooltip>
+    </div>
   ),
-    createData(
+  createData(
     "2025-05-10",
     "DV-JS",
     "Marcus Morris Evan",
-    <>
-      <button className="bg-blue-700 p-2 rounded-md">
-        Détails
-      </button>
-    </>
+    <div>
+      <Tooltip title="Voir les détails">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
+          <Info />
+        </button>
+      </Tooltip>
+    </div>
   ),
-    createData(
+  createData(
     "2025-05-10",
     "DV-JS",
     "Marcus Morris Evan",
-    <>
-      <button className="bg-blue-700 p-2 rounded-md">
-        Détails
-      </button>
-    </>
+    <div>
+      <Tooltip title="Voir les détails">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
+          <Info />
+        </button>
+      </Tooltip>
+    </div>
   ),
 ];
 
@@ -71,9 +87,8 @@ export default function ListeCandidatures() {
 
   // Fonction de recherche
   useEffect(() => {
-    const results = rows.filter(
-      (row) =>
-        row.offre.toLowerCase().includes(searchTerm.toLowerCase()) 
+    const results = rows.filter((row) =>
+      row.offre.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredRows(results);
     setCurrentPage(1);
@@ -153,6 +168,7 @@ export default function ListeCandidatures() {
                               fontSize: "14px",
                               color: "#fff",
                               borderColor: "#1e2939",
+                              justifyItems: "end",
                             }}
                           >
                             {value}

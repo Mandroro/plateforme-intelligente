@@ -16,11 +16,12 @@ import {
   Trash,
 } from "lucide-react";
 import { Tooltip } from "@mui/material";
+import NouveauOffre from "./modal/NouveauOffre";
 
 const columns = [
-  { id: "titre", label: "Titre", minWidth: 50 },
-  { id: "date", label: "Date", minWidth: 10 },
-  { id: "action", label: "Action", minWidth: 10 },
+  { id: "titre", label: "Titre", minWidth: 100 },
+  { id: "date", label: "Date", minWidth: 100 },
+  { id: "action", label: "", minWidth: 10 },
 ];
 
 function createData(titre, date, action) {
@@ -31,14 +32,14 @@ const rows = [
   createData(
     "Developpeur Fullstack ReactJS",
     "2025-05-10",
-    <div className="flex space-x-3">
+    <div className="flex space-x-1">
       <Tooltip title="Modifier">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
           <PenBox />
         </button>
       </Tooltip>
       <Tooltip title="Supprimer">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
           <Trash />
         </button>
       </Tooltip>
@@ -47,14 +48,14 @@ const rows = [
   createData(
     "Lead Developpeur ReactJS",
     "2025-05-10",
-    <div className="flex space-x-3">
+    <div className="flex space-x-1">
       <Tooltip title="Modifier">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
           <PenBox />
         </button>
       </Tooltip>
       <Tooltip title="Supprimer">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
           <Trash />
         </button>
       </Tooltip>
@@ -63,14 +64,14 @@ const rows = [
   createData(
     "Developpeur Fullstack ReactJS/Symfony",
     "2025-05-10",
-    <div className="flex space-x-3">
+    <div className="flex space-x-1">
       <Tooltip title="Modifier">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
           <PenBox />
         </button>
       </Tooltip>
       <Tooltip title="Supprimer">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
           <Trash />
         </button>
       </Tooltip>
@@ -79,14 +80,14 @@ const rows = [
   createData(
     "Developpeur Fulstack ReactJS/NodeJs",
     "2025-05-10",
-    <div className="flex space-x-3">
+    <div className="flex space-x-1">
       <Tooltip title="Modifier">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
           <PenBox />
         </button>
       </Tooltip>
       <Tooltip title="Supprimer">
-        <button className="hover:text-blue-600 cursor-pointer">
+        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
           <Trash />
         </button>
       </Tooltip>
@@ -99,6 +100,15 @@ export default function GestionOffres() {
   const [filteredRows, setFilteredRows] = useState(rows);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
+  const [open, setOpen] = useState(false);
+
+  const ouvrirFormulaireOffre = () => {
+    setOpen(true);
+  };
+
+  const fermerFormulaireOffre = () => {
+    setOpen(false);
+  };
 
   // Fonction de recherche
   useEffect(() => {
@@ -144,13 +154,16 @@ export default function GestionOffres() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="hidden md:flex p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-[Sora] items-center justify-center w-full">
+          <button
+            onClick={ouvrirFormulaireOffre}
+            className="hidden md:flex p-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-[Sora] items-center justify-center w-full"
+          >
             <Plus className="text-white mr-2" />
             Nouveau
           </button>
 
           {/* Bouton mobile */}
-          <button className="md:hidden p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-[Sora] w-1-/2">
+          <button className="md:hidden p-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-[Sora] w-1-/2">
             <Plus className="text-white" />
           </button>
         </div>
@@ -194,6 +207,7 @@ export default function GestionOffres() {
                               fontSize: "14px",
                               color: "#fff",
                               borderColor: "#1e2939",
+                              justifyItems: "end",
                             }}
                           >
                             {value}
@@ -257,6 +271,13 @@ export default function GestionOffres() {
           </button>
         </div>
       )}
+
+      {/* Formulaire offre */}
+      <NouveauOffre
+        open={open}
+        setOpen={setOpen}
+        fermerFormulaireOffre={fermerFormulaireOffre}
+      />
     </div>
   );
 }
