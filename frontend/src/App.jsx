@@ -17,6 +17,11 @@ import PannelRecruteur from "./components/page/PannelRecruteur";
 import CompteRecruteur from "./components/content/panneau-recruteur/CompteRecruteur";
 import ListeCandidatures from "./components/content/panneau-recruteur/ListeCandidatures";
 import GestionOffres from "./components/content/panneau-recruteur/GestionOffres";
+import DashboardRecruteur from "./components/content/panneau-recruteur/DashboardRecruteur";
+import Compte from "./components/content/panneau-admin/Compte";
+import Freelancer from "./components/content/panneau-admin/Freelancer";
+import Recruteur from "./components/content/panneau-admin/Recruteur";
+import Utilisateur from "./components/content/panneau-admin/Utilisateur";
 
 function App() {
   return (
@@ -37,10 +42,10 @@ function App() {
         <Route path="/pannel-admin" element={<PannelAdmin />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="utilisateur" element={null} />
-          <Route path="freelancer" element={null} />
-          <Route path="recruteur" element={null} />
-          <Route path="compte" element={null} />
+          <Route path="utilisateur" element={<Utilisateur/>} />
+          <Route path="freelancer" element={<Freelancer/>} />
+          <Route path="recruteur" element={<Recruteur/>} />
+          <Route path="compte" element={<Compte/>} />
         </Route>
 
         <Route path="/pannel-freelancer" element={<PannelFreelancer />}>
@@ -52,8 +57,7 @@ function App() {
 
         <Route path="/pannel-recruteur" element={<PannelRecruteur />}>
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={null} />
-          <Route path="freelancer" element={null} />
+          <Route path="dashboard" element={<DashboardRecruteur/>} />
           <Route path="offres" element={<GestionOffres/>} />
           <Route path="candidature" element={<ListeCandidatures/>} />
           <Route path="compte" element={<CompteRecruteur/>} />
