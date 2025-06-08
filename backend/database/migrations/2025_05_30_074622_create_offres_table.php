@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('offres', function (Blueprint $table) {
-            $table->string('ref_offre', 10)->primary();
+            $table->id();
             $table->text('titre_offre');
             $table->text('description')->nullable();
-            $table->string('recruteurs_id', 50);
             $table->timestamps();
-            $table->foreign('recruteurs_id')->references('email')->on('recruteurs');
+            $table->foreignId('recruteurs_id')->constrained()->onDelete('cascade');
         });
     }
 

@@ -17,8 +17,7 @@ return new class extends Migration
             $table->text('etablissement');
             $table->text('lieu_formation');
             $table->year('annee_formation');
-            $table->string('freelancers_id', 50);
-            $table->foreign('freelancers_id')->references('email')->on('freelancers');
+            $table->foreignId('freelancers_id')->constrained()->onDelete('cascade');
         });
     }
 

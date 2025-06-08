@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('criteres', function (Blueprint $table) {
             $table->id();
             $table->text('description');
-            $table->string('offres_id', 10);
-            $table->foreign('offres_id')->references('ref_offre')->on('offres');
+            $table->foreignId('offres_id')->constrained()->onDelete('cascade');
         });
     }
 

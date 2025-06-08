@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('competences', function (Blueprint $table) {
             $table->id();
             $table->text('description');
-            $table->string('freelancers_id', 50);
-            $table->foreign('freelancers_id')->references('email')->on('freelancers');
+            $table->foreignId('freelancers_id')->constrained()->onDelete('cascade');
         });
     }
 

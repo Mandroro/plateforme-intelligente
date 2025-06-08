@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Critere extends Model
 {
     use HasFactory;
+
+    public function offres()
+    {
+        return $this->belongsTo(Offre::class);
+    }
 }
