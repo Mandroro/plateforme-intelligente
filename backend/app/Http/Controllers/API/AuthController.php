@@ -35,14 +35,14 @@ class AuthController extends Controller
         if ($data['role'] === 'freelancer') {
 
             $freelancer = new Freelancer();
-            $freelancer->users_id = $utilisateur->id;
+            $freelancer->user_id = $utilisateur->id;
 
             // Compte freelance créer
             $freelancer->save();
         } else {
             
             $recruteur = new Recruteur();
-            $recruteur->users_id = $utilisateur->id;
+            $recruteur->user_id = $utilisateur->id;
 
             // Compte recruteur créer
             $recruteur->save();

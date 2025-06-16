@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('titre_offre');
             $table->text('description')->nullable();
             $table->timestamps();
-            $table->foreignId('recruteurs_id')->constrained()->onDelete('cascade');
+            $table->foreignId('recruteur_id')->constrained()->onDelete('cascade');
         });
     }
 

@@ -9,7 +9,9 @@ class Competence extends Model
 {
     use HasFactory;
 
-    public function freelancers()
+    protected $fillable = ['description', 'freelancer_id'];
+    
+    public function freelancer()
     {
         return $this->belongsTo(Freelancer::class);
     }

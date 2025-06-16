@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('etablissement');
             $table->text('lieu_formation');
             $table->year('annee_formation');
-            $table->foreignId('freelancers_id')->constrained()->onDelete('cascade');
+            $table->foreignId('freelancer_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

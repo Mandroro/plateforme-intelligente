@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('num_telephone')->nullable();
             $table->text('poste_travail')->nullable();
             $table->text('photo_identite')->nullable();
-            $table->foreignId('users_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

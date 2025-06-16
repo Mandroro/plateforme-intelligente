@@ -4,22 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Offre extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titre_offre', 'description', 'recruteurs_id'];
+    protected $fillable = ['titre_offre', 'description', 'recruteur_id'];
 
-    public function recruteurs(){
+    public function recruteur(): BelongsTo
+    {
         return $this->belongsTo(Recruteur::class);
     }
-    
-    public function missions(){
-        return $this->hasMany(Mission::class); 
+
+    public function missions(): HasMany
+    {
+        return $this->hasMany(Mission::class);
     }
 
-    public function criteres(){
-        return $this->hasMany(Critere::class); 
+    public function criteres(): HasMany
+    {
+        return $this->hasMany(Critere::class);
     }
 }

@@ -27,7 +27,7 @@ class OffreController extends Controller
         $data = $request->validate([
             "titre_offre" => "required",
             "description" => "",
-            "recruteurs_id" => "required",
+            "recruteur_id" => "required",
         ]);
 
         $offre = Offre::create($data);
@@ -89,6 +89,7 @@ class OffreController extends Controller
                 "message" => "Offre non trouvé"
             ], 404);
         } else {
+            $offre->delete();
             return response()->json([
                 "message" => "Offre supprimé avec succès"
             ], 200);
