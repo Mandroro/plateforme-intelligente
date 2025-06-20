@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Freelancer;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,10 @@ class FreelancerController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            "message" => "Liste des freelancers recupéré avec succès",
+            "resultat" => Freelancer::with(['user'])->get()
+        ], 200);
     }
 
     /**
@@ -27,7 +31,6 @@ class FreelancerController extends Controller
             "message" => "Détail sur le profil du freelancer récupéré avec succès",
             "resultat" => $profil
         ]);
-        
     }
 
     /**
@@ -50,8 +53,7 @@ class FreelancerController extends Controller
 
         return response()->json([
             "message" => "Profil modifié avec succès",
-            "resultat" => $freelancer 
+            "resultat" => $freelancer
         ], 200);
-
     }
 }

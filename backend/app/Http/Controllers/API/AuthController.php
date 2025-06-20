@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    
+
     public function inscription(Request $request)
     {
 
@@ -32,7 +32,7 @@ class AuthController extends Controller
 
         $utilisateur = User::create($data);
 
-        if ($data['role'] === 'freelancer') {
+        if ($data['role'] === 'Freelancer') {
 
             $freelancer = new Freelancer();
             $freelancer->user_id = $utilisateur->id;
@@ -40,7 +40,7 @@ class AuthController extends Controller
             // Compte freelance créer
             $freelancer->save();
         } else {
-            
+
             $recruteur = new Recruteur();
             $recruteur->user_id = $utilisateur->id;
 
@@ -71,15 +71,16 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'message' => 'Authentification avec succès',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
-        ]);
+        ], 200);
     }
 
     public function deconnexion(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Déconnexion réussie']);
+        return response()->json(['message' => 'Déconnexion avec succès'], 200);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Recruteur;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,12 @@ class RecruteurController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index() {
+        return response()->json([
+            "message" => "Liste des récruteur recupéré avec succès",
+            "resultat" => Recruteur::with(['user'])->get()
+        ], 200);
+    }
 
 
     /**
