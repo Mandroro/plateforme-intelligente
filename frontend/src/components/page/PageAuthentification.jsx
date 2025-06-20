@@ -1,18 +1,53 @@
-import { AtSign, LockKeyhole, MoveLeft, User } from "lucide-react";
-import React from "react";
+import { AtSign, LockKeyhole } from "lucide-react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
+import { useApiConfig } from "../../ApiUrlConfiguration";
+import axios from "axios";
+
 export default function PageAuthentification() {
+  
   const redirection = useNavigate();
+  const { ApiURL } = useApiConfig();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const retourPageAccueil = () => {
     redirection("/");
   };
-  const seConnecter = () => {
-    redirection("/pannel-admin");
+
+  const seConnecter = (e) => {
+    e.preventDefault();
+
+    const data = {
+      email: email,
+      password: password
+    };
+
+    axios.post(`${ApiURL}/connexion`, data, {
+      headers: {
+        "Content-Type":"application/json"
+      }
+    }).then((response) => {
+      if(response.status === 200){
+        
+        localStorage.setItem("token", response.data.access_token);
+        
+        if(response.data.user['role'] === 'Freelancer'){
+          console.log("Message: ", response.data.message);
+          redirection("/pannel-freelancer");
+        }
+        else{
+          console.log("Message: ", response.data.message);
+          redirection("/pannel-recruteur");
+        }
+      }
+    }).catch((error) => {
+      console.log("Erreur inattendue: ", error);
+    })
   };
 
   return (
-    <div className="py-10 md:py-18">
+    <div className="p-2 md:p-8">
       <div className="container mx-auto">
         <div className="grid grid-col-1 md:grid-cols-6 space-x-0">
           <div className=" col-start-3 md:col-start-2 col-end-5 md:col-end-6 p-8 rounded-md">
@@ -30,6 +65,8 @@ export default function PageAuthentification() {
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer votre adresse email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="relative flex items-center w-full mr-2">
@@ -37,6 +74,8 @@ export default function PageAuthentification() {
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer un mot de passe"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <NavLink

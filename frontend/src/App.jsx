@@ -22,10 +22,13 @@ import Compte from "./components/content/panneau-admin/Compte";
 import Freelancer from "./components/content/panneau-admin/Freelancer";
 import Recruteur from "./components/content/panneau-admin/Recruteur";
 import Utilisateur from "./components/content/panneau-admin/Utilisateur";
+import { ApiUrlConfiguration } from "./ApiUrlConfiguration";
+import ProtectedRouter from "./ProtectedRouter";
 
 function App() {
   return (
     <BrowserRouter>
+      <ApiUrlConfiguration>
       <Routes>
         {/* ROUTES SITE VITRINE */}
         <Route path="/" element={<SiteVitrine />}>
@@ -39,7 +42,7 @@ function App() {
         <Route path="/authentification" element={<PageAuthentification />} />
         <Route path="/inscription" element={<PageInscription />} />
 
-        <Route path="/pannel-admin" element={<PannelAdmin />}>
+        <Route path="/pannel-admin" element={<ProtectedRouter><PannelAdmin /></ProtectedRouter>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="utilisateur" element={<Utilisateur/>} />
@@ -48,14 +51,14 @@ function App() {
           <Route path="compte" element={<Compte/>} />
         </Route>
 
-        <Route path="/pannel-freelancer" element={<PannelFreelancer />}>
+        <Route path="/pannel-freelancer" element={<ProtectedRouter><PannelFreelancer /></ProtectedRouter>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardFreelancer />} />
           <Route path="offres" element={<OffresFreelancer />} />
           <Route path="compte" element={<CompteFreelancer/>} />
         </Route>
 
-        <Route path="/pannel-recruteur" element={<PannelRecruteur />}>
+        <Route path="/pannel-recruteur" element={<ProtectedRouter><PannelRecruteur /></ProtectedRouter>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardRecruteur/>} />
           <Route path="offres" element={<GestionOffres/>} />
@@ -63,6 +66,7 @@ function App() {
           <Route path="compte" element={<CompteRecruteur/>} />
         </Route>
       </Routes>
+      </ApiUrlConfiguration>
     </BrowserRouter>
   );
 }

@@ -1,14 +1,50 @@
-import { AtSign, Cog, LockKeyhole, Mail, MoveLeft, User } from "lucide-react";
-import React from "react";
-import { NavLink, useNavigate } from "react-router";
+import { Cog, LockKeyhole, Mail, User } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useApiConfig } from "../../ApiUrlConfiguration";
+import axios from "axios";
+
 export default function PageInscription() {
   const redirection = useNavigate();
+  const { ApiURL } = useApiConfig();
+  const [role, setRole] = useState("");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("");
 
   const retourPageAccueil = () => {
     redirection("/");
   };
-  const creerCompte = () => {
-    console.log("Fonctionnalité non disponible !!");
+  
+  const creerCompte = (e) => {
+    e.preventDefault();
+
+    const data = {
+      role: role,
+      name: nom,
+      email: email,
+      password: password
+    }
+
+    axios.post(`${ApiURL}/inscription`, data, {
+      headers:{
+        "Content-Type":"application/json"
+      }
+    }).then((response) => {
+      if(response.status === 201){
+        
+        console.log("Resultat: ", response.data);
+        
+        setRole("");
+        setNom("");
+        setEmail("")
+        setPassword("");
+      }
+    }).catch((error) => {
+      console.log("Erreur inattendue: ", error);
+    })
+
+    console.log("Data inscription: ", data);
   };
 
   return (
@@ -27,10 +63,10 @@ export default function PageInscription() {
             <div className="space-y-2 mb-4">
             <div className="relative flex items-center w-full mr-2">
                 <Cog className="absolute left-4 text-gray-500" />
-                <select className="w-full bg-gray-200  border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none">
+                <select value={role} onChange={(e)=>setRole(e.target.value)} className="w-full bg-gray-200  border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none">
                   <option className="text-gray-500">Type de compte</option>
-                  <option>Freelancer</option>
-                  <option>Recruteur</option>
+                  <option value="Freelancer">Freelancer</option>
+                  <option value="Recruteur">Recruteur</option>
                 </select>
               </div>
               <div className="relative flex items-center w-full mr-2">
@@ -38,6 +74,8 @@ export default function PageInscription() {
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer un nom/prénom"
+                  value={nom}
+                  onChange={(e)=>setNom(e.target.value)}
                 />
               </div>
               <div className="relative flex items-center w-full mr-2">
@@ -45,6 +83,8 @@ export default function PageInscription() {
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer un adresse email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                 />
               </div>
               <div className="relative flex items-center w-full mr-2">
@@ -52,6 +92,8 @@ export default function PageInscription() {
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Entrer un mot de passe"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                 />
               </div>
             </div>

@@ -1,13 +1,5 @@
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BriefcaseBusiness,
-  Globe,
-  Mail,
-  MapPin,
-  Search,
-} from "lucide-react";
-import React, { useState } from "react";
+import { BriefcaseBusiness, Mail, MapPin, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import Profil1 from "./../../images/exemple-profil-candidat/1.png";
 import Profil2 from "./../../images/exemple-profil-candidat/2.jpeg";
 import Profil3 from "./../../images/exemple-profil-candidat/3.jpeg";
@@ -16,66 +8,41 @@ import Profil5 from "./../../images/exemple-profil-candidat/5.jpeg";
 import Profil6 from "./../../images/exemple-profil-candidat/6.jpeg";
 import Profil7 from "./../../images/exemple-profil-candidat/7.jpg";
 import Profil8 from "./../../images/exemple-profil-candidat/8.jpeg";
+import { useApiConfig } from "../../../ApiUrlConfiguration";
+import axios from "axios";
 
 export default function Candidats() {
-  const listeOffre = [
-    {
-      image: Profil1,
-      nom: "Jean-Jacques Maurice",
-      poste: "Developpeur ReactJs/Laravel",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil2,
-      nom: "Jong Lee",
-      poste: "Developpeur Java",
-      lieu: "Hong Kong, Chine",
-    },
-    {
-      image: Profil3,
-      nom: "Morris Johnson",
-      poste: "Developpeur Fullstack JavaScript",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil4,
-      nom: "Mélanie Janette",
-      poste: "Testeur QA",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil5,
-      nom: "Muriella Kevin",
-      poste: "Administration de Ressource Humaines",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil6,
-      nom: "Johane Mariannah",
-      poste: "Marketing Digital",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil7,
-      nom: "Joséa Margaritta",
-      poste: "Developpeur Frontend ReactJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Profil8,
-      nom: "Joackim Marcus Evan",
-      poste: "Data Engineer",
-      lieu: "Allemagne",
-    },
-  ];
-
+  const { ApiURL } = useApiConfig();
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const offresPerPage = 6;
-  const totalPages = Math.ceil(listeOffre.length / offresPerPage);
+  const dataPerPage = 6;
 
-  const startIndex = (currentPage - 1) * offresPerPage;
-  const endIndex = startIndex + offresPerPage;
-  const offresToShow = listeOffre.slice(startIndex, endIndex);
+  useEffect(() => {
+    axios
+      .get(`${ApiURL}/liste-des-candidats`)
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data.resultat);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue: ", error);
+      });
+  }, []);
+
+  const listeCandidats = data.map((d) => ({
+    image: Profil1,
+    nom: d.user.name,
+    poste: d.poste_travail,
+    email:d.user.email,
+    lieu: d.adresse_actuel,
+  }));
+
+  const totalPages = Math.ceil(listeCandidats.length / dataPerPage);
+
+  const startIndex = (currentPage - 1) * dataPerPage;
+  const endIndex = startIndex + dataPerPage;
+  const dataToShow = listeCandidats.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -125,7 +92,7 @@ export default function Candidats() {
           </div>
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
-          {offresToShow.map((l, index) => (
+          {dataToShow.map((l, index) => (
             <div
               key={index}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
@@ -143,8 +110,8 @@ export default function Candidats() {
                   {l.poste}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  <Mail className="mr-2"/>
-                  example@gmail.com
+                  <Mail className="mr-2" />
+                  {l.email}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   <MapPin className="mr-2" />
