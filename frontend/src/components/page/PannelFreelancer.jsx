@@ -44,9 +44,10 @@ function PannelFreelancer(props) {
         Authorization:`Bearer ${token}`
       }
     }).then((response) => {
-      console.log("Profil: ", response.data);
       setName(response.data.name);
       setEmail(response.data.email);
+    }).catch((error) => {
+      console.log("Erreur inattendue:", error);
     })
   }, [])
   
