@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,7 +8,6 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import List from "@mui/material/List";
@@ -22,14 +21,35 @@ import Typography from "@mui/material/Typography";
 import { NavLink, Outlet, useLocation } from "react-router";
 import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import PageDeconnexion from "./PageDeconnexion";
+import { useApiConfig } from "../../ApiUrlConfiguration";
+import axios from "axios";
+
 
 const drawerWidth = 240;
 
 function PannelFreelancer(props) {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem('token');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [openDeconnexion, setOpenDeconnexion] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${ApiURL}/utilisateur`,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    }).then((response) => {
+      console.log("Profil: ", response.data);
+      setName(response.data.name);
+      setEmail(response.data.email);
+    })
+  }, [])
+  
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -189,7 +209,7 @@ function PannelFreelancer(props) {
               {menuActive}
             </Typography>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="freelancer@exemple.com">
+              <Tooltip title={email}>
                 <IconButton
                   onClick={handleClick}
                   size="small"
@@ -198,9 +218,7 @@ function PannelFreelancer(props) {
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                 >
-                  <AccountCircleIcon
-                    sx={{ width: 40, height: 40, color: "#fff" }}
-                  />
+                  <Avatar sx={{bgcolor:"#364153" ,textTransform:"uppercase"}}>{email.charAt(0)}</Avatar>
                 </IconButton>
               </Tooltip>
             </Box>
@@ -244,16 +262,13 @@ function PannelFreelancer(props) {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               <MenuItem onClick={handleClose}>
-                <AccountCircleIcon
-                  className="mr-2"
-                  sx={{ width: 40, height: 40 }}
-                />
+                <Avatar sx={{bgcolor:"#364153", textTransform:"uppercase"}}>{email.charAt(0)}</Avatar>
                 <Box>
-                  <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
-                    Pseudo
+                  <Typography sx={{ fontFamily: "Sora", fontSize: "14px", textTransform:"uppercase" }}>
+                    {name.split(" ",1)}
                   </Typography>
                   <Typography sx={{ fontFamily: "Sora", fontSize: "12px" }}>
-                    freelancer001@exemple.com
+                    {email}
                   </Typography>
                 </Box>
               </MenuItem>
