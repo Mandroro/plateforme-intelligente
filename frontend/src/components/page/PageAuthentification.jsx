@@ -64,6 +64,7 @@ export default function PageAuthentification() {
                 <AtSign className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
+                  type="email"
                   placeholder="Entrer votre adresse email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -73,6 +74,7 @@ export default function PageAuthentification() {
                 <LockKeyhole className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-gray-200 border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
+                  type="password"
                   placeholder="Entrer un mot de passe"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
