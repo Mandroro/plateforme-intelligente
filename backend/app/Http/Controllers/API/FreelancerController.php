@@ -38,9 +38,7 @@ class FreelancerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $profil = User::with('freelancer')->find($id);
-
-        $freelancer = $profil->freelancer;
+        $freelancer = Freelancer::find($id);
 
         $data = $request->validate([
             "adresse_actuel" => "",
