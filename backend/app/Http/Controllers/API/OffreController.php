@@ -43,7 +43,7 @@ class OffreController extends Controller
      */
     public function show(string $id)
     {
-        $offre = Offre::findOrFail($id);
+        $offre = Offre::find($id);
 
         if (!$offre) {
             return response()->json([
@@ -52,7 +52,7 @@ class OffreController extends Controller
         } else {
             return response()->json([
                 "message" => "Détail sur l'offre récuperé avec succès",
-                "data" => $offre
+                "resultat" => $offre
             ], 200);
         }
     }
