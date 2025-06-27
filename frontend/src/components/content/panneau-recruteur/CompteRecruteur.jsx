@@ -1,18 +1,63 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Profil1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 import { PenBox } from "lucide-react";
 import InformationProfil from "./modal/InformationProfil";
-import { useState } from "react";
+import { useApiConfig } from "../../../ApiUrlConfiguration";
+import axios from "axios";
+import { Button } from "@mui/material";
 
 export default function CompteRecruteur() {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [id, setId] = useState("");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [secteurTravail, setSecteurTravail] = useState("");
+  const [urlSite, setUrlSite] = useState("");
+  const [adresse, setAdresse] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [open, setOpen] = useState(false);
-  const ouvrirInformationProfil = () => {
-    setOpen(true);
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    axios.get(`${ApiURL}/utilisateur`,{
+      headers:{
+        "Authorization":`Bearer ${token}`
+      }
+    }).then((response) => {
+      setId(response.data.id);
+      setNom(response.data.name);
+      setEmail(response.data.email);
+      recruteur(response.data.id);
+    }).catch((error) => {
+      console.log("Erreur inattendue:", error);
+    })
+  }, [])
+
+  const recruteur = (id) => {
+    axios.get(`${ApiURL}/recruteurs/${id}`, {
+      headers:{
+        "Authorization":`Bearer ${token}`
+      }
+    }).then((response) => {
+      setSecteurTravail(response.data.resultat.recruteur.secteur_travail);
+      setUrlSite(response.data.resultat.recruteur.url_siteweb);
+      setAdresse(response.data.resultat.recruteur.adresse_actuel);
+      setTelephone(response.data.resultat.recruteur.numero_telephone);
+    }).catch((error) => {
+      console.log("Erreur inattendue:", error);
+    })
   }
 
+  const ouvrirInformationProfil = () => {
+    setOpen(true);
+  };
   const fermerInformationProfil = () => {
     setOpen(false);
-  }
+  };
+
   return (
     <>
       <div className="bg-gray-800 p-18 md:p-20 relative mb-18 md:mb-14">
@@ -20,57 +65,18 @@ export default function CompteRecruteur() {
           <img className="rounded-md w-60" src={Profil1} />
         </div>
       </div>
-      <div className="p-8 space-y-2">
-        <div className="flex items-center justify-between">
-          <h1 className="text-white font-[Sora] text-[20px]">
-            Information sur mon profil
-          </h1>
-          <button onClick={ouvrirInformationProfil} className="p-2 text-white hover:text-gray-500 rounded-md cursor-pointer">
-            <PenBox />
-          </button>
-        </div>
-        <div className="grid grid-cols-6 gap-2">
+
+      <div className="p-8">
+
+        {/* Information compte */}
+        <div className="grid grid-cols-6 gap-2 mb-8">
           <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Nom de l'entreprise</label>
+            <label className="text-white font-[Sora]">
+              Nom de l'entreprise
+            </label>
             <input
               className=" w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
-              value="Archetype Consulting"
-              readOnly
-            />
-          </div>
-          <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Secteur d'activité</label>
-            <input
-              className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              value="Entreprise de service informatique"
-              readOnly
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-6 gap-2">
-          <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">URL du site web</label>
-            <input
-              className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              value="https://example.example"
-              readOnly
-            />
-          </div>
-          <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Adresse</label>
-            <input
-              className="w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
-              value="Antananarivo, Madagascar"
-              readOnly
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-2 mb-10">
-          <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-3">
-            <label className="text-white font-[Sora]">Contact</label>
-            <input
-              className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              value="0348574101"
+              value={nom}
               readOnly
             />
           </div>
@@ -78,44 +84,109 @@ export default function CompteRecruteur() {
             <label className="text-white font-[Sora]">Email</label>
             <input
               className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              value="example@example.com"
+              value={email}
               readOnly
             />
           </div>
         </div>
 
-        <h1 className="text-white font-[Sora] text-[20px]">
-          Gérer le mot de passe de mon compte
-        </h1>
-        <div className="grid grid-cols-6 gap-2 mb-4">
-          <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-4">
-            <label className="text-white font-[Sora]">
-              Nouveau mot de passe
-            </label>
-            <input
-              className=" w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
-              placeholder="Saisir un nouveau mot de passe "
-            />
+        {/* Information profil */}
+        <div className="mb-8 space-y-2">
+          <div className="flex items-center justify-between">
+            <h1 className="text-white font-[Sora] text-[16px]">
+              Information sur mon profil
+            </h1>
+            <button
+              onClick={ouvrirInformationProfil}
+              className="p-2 text-white hover:text-gray-500 rounded-md cursor-pointer"
+            >
+              <PenBox />
+            </button>
           </div>
-          <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-4">
-            <label className="text-white font-[Sora]">
-              Confirmation du mot de passe
-            </label>
-            <input
-              className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              placeholder="Confirmer votre mot de passe"
-            />
+          <div className="grid grid-cols-6 gap-2">
+            <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-3">
+              <label className="text-white font-[Sora]">
+                Secteur d'activité
+              </label>
+              <input
+                className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
+                value={secteurTravail || "Aucun"}
+                readOnly
+              />
+            </div>
+            <div className="col-start-1 md:col-start-4 col-end-7  bg-gray-800 rounded-md p-3">
+              <label className="text-white font-[Sora]">URL du site web</label>
+              <input
+                className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
+                value={urlSite || "Aucun"}
+                readOnly
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-2">
+            <div className="col-start-1 col-end-7 md:col-end-4  bg-gray-800 rounded-md p-3">
+              <label className="text-white font-[Sora]">Adresse</label>
+              <input
+                className="w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
+                value={adresse || "Aucun"}
+                readOnly
+              />
+            </div>
+            <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-3">
+              <label className="text-white font-[Sora]">Contact</label>
+              <input
+                className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
+                value={telephone || "Aucun"}
+                readOnly
+              />
+            </div>
           </div>
         </div>
-        <div className="md:text-end">
-          <button className="bg-green-600 hover:bg-green-700 text-white font-[Sora] text-[14px] p-3 rounded-md cursor-pointer w-full md:w-1/4">
-            Mettre à jour le mot de passe
-          </button>
+
+        {/* Gérer mot de passe */}
+        <div className="space-y-2">
+          <h1 className="text-white font-[Sora] text-[16px]">
+            Gérer le mot de passe de mon compte
+          </h1>
+          <div className="grid grid-cols-6 gap-2 mb-4">
+            <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-4">
+              <label className="text-white font-[Sora]">
+                Nouveau mot de passe
+              </label>
+              <input
+                className=" w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
+                placeholder="Saisir un nouveau mot de passe "
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-4">
+              <label className="text-white font-[Sora]">
+                Confirmation du mot de passe
+              </label>
+              <input
+                className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
+                placeholder="Confirmer votre mot de passe"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="md:text-end">
+            <Button variant="contained" onClick={null} sx={{fontFamily:"Sora", fontSize:13, textTransform:"inherit"}}>
+              Mettre à jour le mot de passe
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Formulaire information profil */}
-      <InformationProfil open={open} setOpen={setOpen} fermerInformationProfil={fermerInformationProfil}/>
+      <InformationProfil
+        id={id}
+        open={open}
+        setOpen={setOpen}
+        fermerInformationProfil={fermerInformationProfil}
+      />
     </>
   );
 }
