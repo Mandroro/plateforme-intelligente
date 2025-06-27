@@ -17,114 +17,112 @@ import {
 } from "lucide-react";
 import { Tooltip } from "@mui/material";
 import NouveauOffre from "./modal/NouveauOffre";
-
-const columns = [
-  { id: "titre", label: "Titre", minWidth: 100 },
-  { id: "date", label: "Date", minWidth: 100 },
-  { id: "action", label: "", minWidth: 10 },
-];
-
-function createData(titre, date, action) {
-  return { titre, date, action };
-}
-
-const rows = [
-  createData(
-    "Developpeur Fullstack ReactJS",
-    "2025-05-10",
-    <div className="flex space-x-1">
-      <Tooltip title="Modifier">
-        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-          <PenBox />
-        </button>
-      </Tooltip>
-      <Tooltip title="Supprimer">
-        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
-          <Trash />
-        </button>
-      </Tooltip>
-    </div>
-  ),
-  createData(
-    "Lead Developpeur ReactJS",
-    "2025-05-10",
-    <div className="flex space-x-1">
-      <Tooltip title="Modifier">
-        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-          <PenBox />
-        </button>
-      </Tooltip>
-      <Tooltip title="Supprimer">
-        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
-          <Trash />
-        </button>
-      </Tooltip>
-    </div>
-  ),
-  createData(
-    "Developpeur Fullstack ReactJS/Symfony",
-    "2025-05-10",
-    <div className="flex space-x-1">
-      <Tooltip title="Modifier">
-        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-          <PenBox />
-        </button>
-      </Tooltip>
-      <Tooltip title="Supprimer">
-        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
-          <Trash />
-        </button>
-      </Tooltip>
-    </div>
-  ),
-  createData(
-    "Developpeur Fulstack ReactJS/NodeJs",
-    "2025-05-10",
-    <div className="flex space-x-1">
-      <Tooltip title="Modifier">
-        <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-          <PenBox />
-        </button>
-      </Tooltip>
-      <Tooltip title="Supprimer">
-        <button className="bg-blue-600 p-2 rounded-md cursor-pointer">
-          <Trash />
-        </button>
-      </Tooltip>
-    </div>
-  ),
-];
+import { useApiConfig } from "../../../ApiUrlConfiguration";
+import axios from "axios";
+import ModifierOffre from "./modal/ModifierOffre";
+import SpecifierOffre from "./modal/SpecifierOffre";
 
 export default function GestionOffres() {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRows, setFilteredRows] = useState(rows);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
 
+  const [idOffre, setIdOffre] = useState("");
+  const [openSpecifierOffre, setOpenSpecifierOffre] = useState(false);
+  const [openModifierOffre, setOpenModifierOffre] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`${ApiURL}/offres`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.resultat);
+        setData(response.data.resultat);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  }, []);
+
+  const columns = [
+    { id: "titre", label: "Titre", minWidth: 100 },
+    { id: "date", label: "Date", minWidth: 100 },
+    { id: "action", label: "", minWidth: 10 },
+  ];
+
+  function createData(titre, date, action) {
+    return { titre, date, action };
+  }
+
+  const rows = data.map((d) =>
+    createData(
+      d.titre_offre,
+      d.created_at,
+      <div className="flex space-x-1">
+        <Tooltip title="Spécifier l'offre">
+          <button
+            onClick={() => ouvrirSpecifierOffre(d.id)}
+            className="bg-gray-600 p-2 rounded-md cursor-pointer"
+          >
+            <Plus />
+          </button>
+        </Tooltip>
+        <Tooltip title="Modifier l'offre">
+          <button
+            onClick={() => ouvrirModifierOffre(d.id)}
+            className="bg-gray-600 p-2 rounded-md cursor-pointer"
+          >
+            <PenBox />
+          </button>
+        </Tooltip>
+        <Tooltip title="Supprimer l'offre">
+          <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
+            <Trash />
+          </button>
+        </Tooltip>
+      </div>
+    )
+  );
+
+  // Ajout d'une offre
   const ouvrirFormulaireOffre = () => {
     setOpen(true);
   };
-
   const fermerFormulaireOffre = () => {
     setOpen(false);
   };
 
-  // Fonction de recherche
-  useEffect(() => {
-    const results = rows.filter((row) =>
-      row.titre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredRows(results);
-    setCurrentPage(1);
-  }, [searchTerm, rows]);
+  // Spécification d'une offre
+  const ouvrirSpecifierOffre = (id) => {
+    setIdOffre(id);
+    setOpenSpecifierOffre(true);
+  };
+  const fermerSpecifierOffre = () => {
+    setOpenSpecifierOffre(false);
+  };
+
+  // Modification d'une offre
+  const ouvrirModifierOffre = (id) => {
+    setIdOffre(id);
+    setOpenModifierOffre(true);
+  };
+  const fermerModifierOffre = () => {
+    setOpenModifierOffre(false);
+  };
 
   // Calcul de la pagination
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = filteredRows.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = rows.slice(indexOfFirstRow, indexOfLastRow);
 
-  const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -240,7 +238,7 @@ export default function GestionOffres() {
       </Paper>
 
       {/* Pagination */}
-      {filteredRows.length > 0 && ( // Afficher la pagination seulement s'il y a des données filtrées
+      {rows.length > 0 && ( // Afficher la pagination seulement s'il y a des données filtrées
         <div className="flex justify-center mt-4 space-x-2">
           <button
             onClick={handlePreviousPage}
@@ -277,6 +275,21 @@ export default function GestionOffres() {
         open={open}
         setOpen={setOpen}
         fermerFormulaireOffre={fermerFormulaireOffre}
+      />
+
+      {/* Spécification offre */}
+      <SpecifierOffre
+        id={idOffre}
+        open={openSpecifierOffre}
+        setOpen={setOpenSpecifierOffre}
+        fermerSpecifierOffre={fermerSpecifierOffre}
+      />
+
+      {/* Modification offre */}
+      <ModifierOffre
+        id={idOffre}
+        open={openModifierOffre}
+        fermerModifierOffre={fermerModifierOffre}
       />
     </div>
   );

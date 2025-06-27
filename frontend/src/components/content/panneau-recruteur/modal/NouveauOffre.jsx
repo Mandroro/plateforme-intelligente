@@ -3,42 +3,70 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Plus } from "lucide-react";
+import { useApiConfig } from "../../../../ApiUrlConfiguration";
+import axios from "axios";
 
 export default function NouveauOffre({ open, setOpen, fermerFormulaireOffre }) {
-  const [mission, setMission] = useState("");
-  const [competence, setCompetence] = useState("");
-  const [dataCompetence, setDataCompetence] = useState([]);
-  const [dataMission, setDataMission] = useState([]);
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [id, setId] = useState("");
+  const [titre, setTitre] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
-    if (open) {
-      setCompetence("");
-      setMission("");
-      setDataCompetence([]);
-      setDataMission([]);
-    }
-  }, [open]);
+    axios
+      .get(`${ApiURL}/utilisateur`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        recruteur(response.data.id);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  }, []);
 
-  const addMission = () => {
-    if (mission.trim() !== "") {
-      setDataMission([...dataMission, mission]);
-      setMission("");
-    }
+  const recruteur = (id) => {
+    axios
+      .get(`${ApiURL}/recruteurs/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setId(response.data.resultat.recruteur.id);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
   };
 
-  const addCompetence = () => {
-    if (competence.trim() !== "") {
-      setDataCompetence([...dataCompetence, competence]);
-      setCompetence("");
-    }
-  };
+  const enregistrerOffre = (e) => {
+    e.preventDefault();
 
-  const enregistrerOffre = () => {
-    console.log("Competencies to save:", dataCompetence);
-    setOpen(false);
+    const data = {
+      titre_offre: titre,
+      description: description,
+      recruteur_id: id,
+    };
+
+    axios
+      .post(`${ApiURL}/offres/create`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        setOpen(false);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
   };
 
   return (
@@ -52,99 +80,46 @@ export default function NouveauOffre({ open, setOpen, fermerFormulaireOffre }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Nouvelle offre"}</DialogTitle>
-        <DialogContent dividers>
-          <div className="mb-4">
-            <label className="font-[Sora]">Réference</label>
-            <input
-              className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none"
-              placeholder="Réference"
-            />
-          </div>
+        <DialogTitle
+          id="alert-dialog-title"
+          sx={{ fontFamily: "Sora", fontSize: 18 }}
+        >
+          {"Nouvelle offre"}
+        </DialogTitle>
+        <DialogContent>
           <div className="mb-4">
             <label className="font-[Sora]">Titre</label>
             <input
-              className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none"
+              className="w-full font-[Sora] bg-white p-2 border border-gray-200 rounded-md focus:outline-none"
               placeholder="Ajouter un titre"
+              value={titre}
+              onChange={(e) => setTitre(e.target.value)}
             />
           </div>
           <div className="mb-4">
             <label className="font-[Sora]">Description</label>
             <textarea
-              rows={4}
-              className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none"
+              rows={3}
+              className="w-full font-[Sora] bg-white p-2 border border-gray-200 rounded-md focus:outline-none"
               placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
-          </div>
-          <div className="mb-4">
-            <label className="font-[Sora]">Mission</label>
-            <div className="flex">
-              <input
-                className="w-full bg-white p-2 border border-gray-200 rounded-l-md focus:outline-none"
-                placeholder="Ajouter une mission"
-                value={mission}
-                onChange={(e) => setMission(e.target.value)}
-              />
-              <button onClick={addMission} className="bg-blue-600 p-2 rounded-r-md text-white cursor-pointer">
-                <Plus />
-              </button>
-            </div>
-            {dataMission.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {dataMission.map((mis, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-100 text-blue-800 text-[14px] font-[Sora] p-2 rounded-full"
-                  >
-                    {mis}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="font-[Sora]">Compétence requise</label>
-            <div className="flex">
-              <input
-                className="w-full bg-white p-2 border border-gray-200 rounded-l-md focus:outline-none"
-                placeholder="Ajouter un compétence"
-                value={competence}
-                onChange={(e) => setCompetence(e.target.value)}
-              />
-              <button
-                onClick={addCompetence}
-                className="bg-blue-600 p-2 rounded-r-md text-white cursor-pointer"
-              >
-                <Plus />
-              </button>
-            </div>
-            {dataCompetence.length > 0 && ( // Only render if there are competencies
-              <div className="mt-3 flex flex-wrap gap-2">
-                {dataCompetence.map((comp, index) => (
-                  <span
-                    key={index} // Consider a more robust key for production (e.g., a unique ID if competencies have them)
-                    className="bg-blue-100 text-blue-800 text-[14px] font-[Sora] p-2 rounded-full"
-                  >
-                    {comp}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         </DialogContent>
         <DialogActions>
-          <button
-            className="bg-gray-200 hover:bg-gray-300 w-1/4 rounded-md text-gray-950 font-[Sora] p-2 cursor-pointer"
+          <Button
             onClick={fermerFormulaireOffre}
+            sx={{ fontFamily: "Sora", textTransform: "inherit" }}
           >
             Annuler
-          </button>
-          <button
-            className="bg-green-600 hover:bg-green-700 w-1/4 rounded-md text-white font-[Sora] p-2 cursor-pointer"
+          </Button>
+          <Button
             onClick={enregistrerOffre}
+            sx={{ fontFamily: "Sora", textTransform: "inherit" }}
           >
             Enregistrer
-          </button>
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
