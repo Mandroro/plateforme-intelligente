@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mission;
+use App\Models\Offre;
 use Illuminate\Http\Request;
 
 class MissionController extends Controller
@@ -14,6 +15,14 @@ class MissionController extends Controller
     public function index()
     {
         //
+    }
+
+    public function show(string $id){
+        $mission = Mission::where('offre_id', $id)->get();
+        return response()->json([
+            "message" => "Liste des missions sur l'offre récupéré avec succès",
+            "resultat" => $mission
+        ], 200);
     }
 
     /**

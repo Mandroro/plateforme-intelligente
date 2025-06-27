@@ -62,10 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/offres/{id}', [OffreController::class, 'destroy']);
 
     // Mission
+    Route::get('/missions/{id}', [MissionController::class, 'show']);
     Route::post('/missions/create', [MissionController::class, 'store']);
     Route::delete('/missions/{id}', [MissionController::class, 'destroy']);
 
     // Critère
+    Route::get('/criteres/{id}', [CritereController::class, 'show']);
     Route::post('/criteres/create', [CritereController::class, 'store']);
     Route::delete('/critere/{id}', [CritereController::class, 'destroy']);
 

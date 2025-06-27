@@ -16,6 +16,15 @@ class CritereController extends Controller
         //
     }
 
+    public function show(string $id)
+    {
+        $critere = Critere::where('offre_id', $id)->get();
+        return response()->json([
+            "message" => "Liste des critères sur l'offre récupéré avec succès",
+            "resultat" => $critere
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -41,12 +50,11 @@ class CritereController extends Controller
     {
         $critere = Critere::find($id);
 
-        if(!$critere){
+        if (!$critere) {
             return response()->json([
                 "message" => "Critère introuvable"
             ], 404);
-        }
-        else{
+        } else {
             $critere->delete();
             return response()->json([
                 "message" => "Critère supprimé avec succès ",
