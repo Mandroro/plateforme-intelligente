@@ -66,7 +66,8 @@ export default function NouveauFormation({
   return (
     <React.Fragment>
       <Dialog
-        fullScreen={fullScreen}
+        fullWidth
+        maxWidth={"xs"}
         open={open}
         aria-labelledby="responsive-dialog-title"
       >
