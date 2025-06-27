@@ -1,23 +1,70 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useApiConfig } from "../../../../ApiUrlConfiguration";
+import axios from "axios";
+import { Button } from "@mui/material";
 
 export default function InformationProfil({
+  id,
   open,
   setOpen,
   fermerInformationProfil,
 }) {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [idRecruteur, setIdRecruteur] = useState("");
+  const [secteurTravail, setSecteurTravail] = useState("");
+  const [urlSite, setUrlSite] = useState("");
+  const [adresse, setAdresse] = useState("");
+  const [telephone, setTelephone] = useState("");
+
   useEffect(() => {
     if (open) {
-      console.log("Open");
+      axios
+        .get(`${ApiURL}/recruteurs/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setIdRecruteur(response.data.resultat.recruteur.id);
+          setSecteurTravail(response.data.resultat.recruteur.secteur_travail);
+          setUrlSite(response.data.resultat.recruteur.url_siteweb);
+          setAdresse(response.data.resultat.recruteur.adresse_actuel);
+          setTelephone(response.data.resultat.recruteur.numero_telephone);
+        })
+        .catch((error) => {
+          console.log("Erreur inattendue:", error);
+        });
     }
   }, [open]);
 
-  const mettreAjour = () => {
-    console.log("Save");
-    setOpen(false);
+  const mettreAjour = (e) => {
+    e.preventDefault();
+
+    const data = {
+      secteur_travail: secteurTravail,
+      url_siteweb: urlSite,
+      adresse_actuel: adresse,
+      numero_telephone: telephone
+    }
+
+    axios.put(`${ApiURL}/recruteurs/${idRecruteur}`, data, {
+      headers:{
+        "Authorization":`Bearer ${token}`,
+        "Content-Type":"application/json"
+      }
+    }).then((response) => {
+      if(response.status === 200){
+        console.log(response.data.message);
+        setOpen(false);
+      }
+    }).catch((error) => {
+      console.log("Erreur inattendue:", error);
+    })
   };
 
   return (
@@ -25,30 +72,23 @@ export default function InformationProfil({
       <Dialog
         sx={{ marginTop: 6 }}
         fullWidth
-        maxWidth={"sm"}
+        maxWidth={"xs"}
         open={open}
         scroll="paper"
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle id="alert-dialog-title" sx={{fontFamily:"Sora", fontSize:18}}>
           {"Information sur mon profil"}
         </DialogTitle>
-        <DialogContent dividers>
-          <div className="mb-4">
-            <label className="font-[Sora]">Nom de l'entreprise</label>
-            <input
-              className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
-              placeholder="Réference"
-              value="Archetype Consulting"
-            />
-          </div>
+        <DialogContent>
           <div className="mb-4">
             <label className="font-[Sora]">Secteur d'activité</label>
             <input
               className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
               placeholder="Ajouter un titre"
-              value="Entreprise de service informatique"
+              value={secteurTravail || ""}
+              onChange={(e) => setSecteurTravail(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -56,7 +96,8 @@ export default function InformationProfil({
             <input
               className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
               placeholder="URL du site web"
-              value="https://example.example"
+              value={urlSite || ""}
+              onChange={(e) => setUrlSite(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -65,7 +106,8 @@ export default function InformationProfil({
               rows={2}
               className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
               placeholder="Adresse"
-              value="Antananarivo, Madagascar"
+              value={adresse || ""}
+              onChange={(e) => setAdresse(e.target.value)}
             ></textarea>
           </div>
           <div className="mb-4">
@@ -73,31 +115,24 @@ export default function InformationProfil({
             <input
               className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
               placeholder="Contact"
-              value="0348574101"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="font-[Sora]">Email</label>
-            <input
-              className="w-full bg-white p-2 border border-gray-200 rounded-md focus:outline-none font-[Sora] text-gray-500"
-              placeholder="Description"
-              value="example@example.com"
+              value={telephone || ""}
+              onChange={(e) => setTelephone(e.target.value)}
             />
           </div>
         </DialogContent>
         <DialogActions>
-          <button
-            className="bg-gray-200 hover:bg-gray-300 w-1/4 rounded-md text-gray-950 font-[Sora] p-2 cursor-pointer"
+          <Button
             onClick={fermerInformationProfil}
+            sx={{ fontFamily: "Sora", fontSize: 14, textTransform: "inherit" }}
           >
             Annuler
-          </button>
-          <button
-            className="bg-green-600 hover:bg-green-700 w-1/4 rounded-md text-white font-[Sora] p-2 cursor-pointer"
+          </Button>
+          <Button
             onClick={mettreAjour}
+            sx={{ fontFamily: "Sora", fontSize: 14, textTransform: "inherit" }}
           >
             Modifier
-          </button>
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
