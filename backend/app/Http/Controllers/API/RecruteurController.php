@@ -37,9 +37,7 @@ class RecruteurController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $profil = User::with('recruteur')->find($id);
-
-        $recruteur = $profil->recruteur;
+        $recruteur = Recruteur::find($id);
 
         $data = $request->validate([
             "url_siteweb" => "",
