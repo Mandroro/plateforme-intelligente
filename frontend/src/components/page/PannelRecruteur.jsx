@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,9 +7,9 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -22,14 +22,38 @@ import Logout from "@mui/icons-material/Logout";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { NavLink, Outlet, useLocation } from "react-router";
-import { ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import PageDeconnexion from "./PageDeconnexion";
+import { useApiConfig } from "../../ApiUrlConfiguration";
+import axios from "axios";
 
 const drawerWidth = 240;
 
 function PannelRecruteur(props) {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [openDeconnexion, setOpenDeconnexion] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`${ApiURL}/utilisateur`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setName(response.data.name);
+        setEmail(response.data.email);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  }, []);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -122,7 +146,9 @@ function PannelRecruteur(props) {
                 >
                   <div className="flex items-center justify-left">
                     <EmailIcon className="mr-4" />
-                    <Typography sx={{ fontFamily: "Sora" }}>Candidature</Typography>
+                    <Typography sx={{ fontFamily: "Sora" }}>
+                      Candidature
+                    </Typography>
                   </div>
                 </NavLink>
               }
@@ -165,187 +191,209 @@ function PannelRecruteur(props) {
     setAnchorEl(null);
   };
 
+  const seDeconnecter = () => {
+    setOpenDeconnexion(true);
+  };
+
+  const closeDeconnexion = () => {
+    setOpenDeconnexion(false);
+  };
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        className="bg-gray-"
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          bgcolor: "#101828",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "Sora",
-              textTransform: "capitalize",
-            }}
-          >
-            {menuActive}
-          </Typography>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="freelancer@exemple.com">
-              <IconButton
-                onClick={handleClick}
-                size="small"
-                sx={{ ml: 2 }}
-                aria-controls={open ? "account-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-              >
-                <AccountCircleIcon
-                  sx={{ width: 40, height: 40, color: "#fff" }}
-                />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Menu
-            anchorEl={anchorEl}
-            id="account-menu"
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-            slotProps={{
-              paper: {
-                elevation: 0,
-                sx: {
-                  overflow: "visible",
-                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                  mt: 2,
-                  bgcolor: "#030712",
-                  color: "#fff",
-                  "& .MuiAvatar-root": {
-                    width: 32,
-                    height: 32,
-                    ml: -0.5,
-                    mr: 1,
-                  },
-                  "&::before": {
-                    content: '""',
-                    display: "block",
-                    position: "absolute",
-                    top: 0,
-                    right: 20,
-                    width: 10,
-                    height: 10,
+    <React.Fragment>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          className="bg-gray-"
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+            bgcolor: "#101828",
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                flexGrow: 1,
+                fontFamily: "Sora",
+                textTransform: "capitalize",
+              }}
+            >
+              {menuActive}
+            </Typography>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title={email}>
+                <IconButton
+                  onClick={handleClick}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                >
+                  <Avatar
+                    sx={{ bgcolor: "#364153", textTransform: "uppercase" }}
+                  >
+                    {email.charAt(0)}
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={open}
+              onClose={handleClose}
+              onClick={handleClose}
+              slotProps={{
+                paper: {
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 2,
                     bgcolor: "#030712",
-                    transform: "translateY(-50%) rotate(45deg)",
-                    zIndex: 0,
+                    color: "#fff",
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    "&::before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 20,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "#030712",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
                   },
                 },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem onClick={handleClose}>
+                <Avatar sx={{ bgcolor: "#364153", textTransform: "uppercase" }}>
+                  {email.charAt(0)}
+                </Avatar>
+                <Box>
+                  <Typography
+                    sx={{
+                      fontFamily: "Sora",
+                      fontSize: "14px",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {name.split(" ", 1)}
+                  </Typography>
+                  <Typography sx={{ fontFamily: "Sora", fontSize: "12px" }}>
+                    {email}
+                  </Typography>
+                </Box>
+              </MenuItem>
+              <Divider sx={{ borderColor: "#fff", m: 2 }} />
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" sx={{ color: "#fff" }} />
+                </ListItemIcon>
+                <NavLink to="/pannel-recruteur/compte">
+                  <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
+                    Gérer mon compte
+                  </Typography>
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={seDeconnecter}>
+                <ListItemIcon>
+                  <Logout fontSize="small" sx={{ color: "#fff" }} />
+                </ListItemIcon>
+                <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
+                  Se déconnecter
+                </Typography>
+              </MenuItem>
+            </Menu>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                bgcolor: "#030712",
               },
             }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            slotProps={{
+              root: {
+                keepMounted: true, // Better open performance on mobile.
+              },
+            }}
           >
-            <MenuItem onClick={handleClose}>
-              <AccountCircleIcon
-                className="mr-2"
-                sx={{ width: 40, height: 40 }}
-              />
-              <Box>
-                <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
-                  Pseudo
-                </Typography>
-                <Typography sx={{ fontFamily: "Sora", fontSize: "12px" }}>
-                  freelancer001@exemple.com
-                </Typography>
-              </Box>
-            </MenuItem>
-            <Divider sx={{ borderColor: "#fff", m: 2 }} />
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <SettingsIcon fontSize="small" sx={{ color: "#fff" }} />
-              </ListItemIcon>
-              <NavLink to="/pannel-freelancer/compte">
-                <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
-                  Gérer mon compte
-                </Typography>
-              </NavLink>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <Logout fontSize="small" sx={{ color: "#fff" }} />
-              </ListItemIcon>
-              <Typography sx={{ fontFamily: "Sora", fontSize: "14px" }}>
-                Se déconnecter
-              </Typography>
-            </MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                height: "100%",
+                bgcolor: "#030712",
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              bgcolor: "#030712",
-            },
-          }}
-          slotProps={{
-            root: {
-              keepMounted: true, // Better open performance on mobile.
-            },
+            flexGrow: 1,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
           }}
         >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              height: "100%",
-              bgcolor: "#030712",
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        <Outlet />
+          <Toolbar />
+          <Outlet />
+        </Box>
       </Box>
 
-      
-    </Box>
+      {/* Modal déconnexion */}
+      <PageDeconnexion
+        open={openDeconnexion}
+        setOpen={setOpenDeconnexion}
+        handleClose={closeDeconnexion}
+      />
+    </React.Fragment>
   );
 }
 
