@@ -7,7 +7,9 @@ use App\Http\Controllers\API\FreelancerController;
 use App\Http\Controllers\API\OffreController;
 use App\Http\Controllers\API\RecruteurController;
 use App\Http\Controllers\API\CritereController;
+use App\Http\Controllers\API\MatchingController;
 use App\Http\Controllers\API\MissionController;
+use App\Http\Controllers\API\UserController;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // Gérer mot de passe utilisateur
+    Route::put('/utilisateurs/{id}', [UserController::class, 'resetPassword']);
+
     // Recruteur
     Route::get('/recruteurs/{id}', [RecruteurController::class, 'show']);
     Route::put('/recruteurs/{id}', [RecruteurController::class, 'update']);
@@ -82,6 +87,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //Compétence
     Route::post('/competences/create', [CompetenceController::class, 'store']);
     Route::delete('/competences/{id}', [CompetenceController::class, 'destroy']);
+
+    // Matching automatique depuis un API externe IA
+    Route::get('/matching-offre/{id}', [MatchingController::class, 'matchingByOffre']);
+    Route::get('/matching-freelancer', [MatchingController::class, 'matchingByFreelancer']);
 
     // Déconnexion
     Route::delete('/deconnexion', [AuthController::class, 'deconnexion']);
