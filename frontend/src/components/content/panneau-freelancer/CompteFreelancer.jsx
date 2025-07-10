@@ -28,6 +28,8 @@ export default function CompteFreelancer() {
   const [openSupprimerFormation, setOpenSupprimerFormation] = useState(false);
   const [openSupprimerCompetence, setOpenSupprimerCompetence] = useState(false);
 
+  const [newPassword, setNewPassword] = useState("");
+
   useEffect(() => {
     axios
       .get(`${ApiURL}/utilisateur`, {
@@ -103,6 +105,31 @@ export default function CompteFreelancer() {
   };
   const fermerSupprimerCompetence = () => {
     setOpenSupprimerCompetence(false);
+  };
+
+  // Gérer mot de passe
+  const changerMotpasse = (e) => {
+    e.preventDefault();
+
+    const data = {
+      password: newPassword,
+    };
+
+    axios
+      .put(`${ApiURL}/utilisateurs/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setNewPassword("");
+          console.log(response.data.message);
+        }
+      }).catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
   };
 
   return (
@@ -223,7 +250,7 @@ export default function CompteFreelancer() {
         </div>
 
         {/* Gérer mes compétences */}
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="flex items-center justify-between">
             <h1 className="text-white font-[Sora] text-[16px]">Compétences</h1>
             <button
@@ -264,27 +291,21 @@ export default function CompteFreelancer() {
           Gérer le mot de passe de mon compte
         </h1>
         <div className="grid grid-cols-6 gap-2">
-          <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-4">
+          <div className="col-start-1 col-end-7 bg-gray-800 rounded-md p-4">
             <label className="text-white font-[Sora]">
-              Nouveau mot de passe
+              Changer le mot de passe
             </label>
             <input
               className=" w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
-              placeholder="Saisir un nouveau mot de passe "
-            />
-          </div>
-          <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-4">
-            <label className="text-white font-[Sora]">
-              Confirmation du mot de passe
-            </label>
-            <input
-              className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-              placeholder="Confirmer votre mot de passe"
+              type="password"
+              placeholder="Saisir le nouveau mot de passe "
+              value={newPassword}
+              onChange={(e)=>setNewPassword(e.target.value)}
             />
           </div>
         </div>
         <div className="text-end">
-          <button className="bg-green-600 hover:bg-green-700 text-white font-[Sora] text-[14px] p-3 rounded-md cursor-pointer w-full md:w-1/4">
+          <button onClick={changerMotpasse} className="bg-green-600 hover:bg-green-700 text-white font-[Sora] text-[14px] p-3 rounded-md cursor-pointer w-full md:w-1/4">
             Mettre à jour le mot de passe
           </button>
         </div>
