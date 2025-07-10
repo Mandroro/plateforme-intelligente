@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class OffreController extends Controller
 {   
+    
     /**
      * Display a listing of the resource.
      */
@@ -15,7 +16,7 @@ class OffreController extends Controller
     {
         return response()->json([
             "message" => "Liste des offres récupéré avec succès",
-            "resultat" => Offre::with('recruteur.user')->get()
+            "resultat" => Offre::with(['missions', 'criteres'])->get()
         ], 200);
     }
 
