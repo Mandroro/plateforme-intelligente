@@ -53,7 +53,7 @@ Route::get('/liste-des-candidats/{id}', [FreelancerController::class, 'show']);
 
 // Liste des recruteurs inscrit
 Route::get('/liste-des-entreprises', [RecruteurController::class, 'index']);
-Route::get('/liste-des-entreprises/{id}', [RecruteurController::class, 'show']);
+Route::get('/liste-des-entreprises/{id}', [RecruteurController::class, 'detail']);
 
 
 // Route API accessible après authentification
