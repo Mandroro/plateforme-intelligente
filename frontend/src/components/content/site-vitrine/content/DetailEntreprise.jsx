@@ -1,35 +1,37 @@
-import { useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { useApiConfig } from "../../../../ApiUrlConfiguration";
 import { Button } from "@mui/material";
 import {
-  BriefcaseBusiness,
-  Building,
-  CalendarDays,
-  Check,
-  CheckCircle2Icon,
   ChevronLeft,
-  Circle,
-  MapPin,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function DetailEntreprise() {
   const { ApiURL } = useApiConfig();
-  const id = localStorage.getItem("OFFRE_ID_DETAIL");
+  const redirection = useNavigate();
+  const id = localStorage.getItem("ENTREPRISE_ID_DETAIL");
   const [data, setData] = useState([]);
+  const [dataUser, setDataUser] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${ApiURL}/liste-des-offres/${id}`)
+      .get(`${ApiURL}/liste-des-entreprises/${id}`)
       .then((response) => {
         console.log(response.data.resultat);
         setData(response.data.resultat);
+        setDataUser(response.data.resultat.user);
       })
       .catch((error) => {
         console.log("Erreur inattendue:", error);
       });
   }, [id]);
+
+  const retourEntreprise = () => {
+    localStorage.removeItem("ENTREPRISE_ID_DETAIL");
+    redirection("/entreprises");
+  }
+
 
   return (
     <>
@@ -38,24 +40,11 @@ export default function DetailEntreprise() {
           <h1 className="text-white font-[Sora] text-[18px]">
             Détails sur l'entreprise :
           </h1>
-          <h1 className="text-white font-[Sora] font-bold text-[40px] uppercase">
-            Nom de l'entreprise
+          <h1 className="text-white font-[Sora] font-bold text-[40px] uppercase mb-8">
+            {dataUser.name}
           </h1>
-          {/* <ul className="text-white font-[Sora] font-extralight flex items-center justify-center space-x-10 mb-8">
-            <li className="flex items-center">
-              <Building className="mr-2" />
-              Recruteur : Hi-tech
-            </li>
-            <li className="flex items-center">
-              <MapPin className="mr-2" />
-              Lieu : Paris, France
-            </li>
-            <li className="flex items-center">
-              <CalendarDays className="mr-2" />
-              Publié le : 19 Juin 2025
-            </li>
-          </ul> */}
           <Button
+          onClick={retourEntreprise}
             variant="contained"
             sx={{
               color: "white",
@@ -78,31 +67,31 @@ export default function DetailEntreprise() {
                   Adresse email
                 </h1>
                 <p className="text-gray-400 font-[Sora] font-light bg-gray-800 p-4 rounded-md">
-                  example@gmail.com
+                  {dataUser.email}
                 </p>
               </div>
               <div className="mb-4 space-y-2">
                 <h1 className="text-white font-[Sora] font-bold">Secteur de travail</h1>
                 <p className="text-gray-400 font-[Sora] font-light bg-gray-800 p-4 rounded-md">
-                  Exemple de secteur de travail
+                  {data.secteur_travail || "Aucun"}
                 </p>
               </div>
               <div className="mb-4 space-y-2">
                 <h1 className="text-white font-[Sora] font-bold">URL du site web</h1>
                 <p className="text-gray-400 font-[Sora] font-light bg-gray-800 p-4 rounded-md">
-                  example de url site web
+                  {data.url_siteweb || "Aucun"}
                 </p>
               </div>
               <div className="mb-4 space-y-2">
                 <h1 className="text-white font-[Sora] font-bold">Contact</h1>
                 <p className="text-gray-400 font-[Sora] font-light bg-gray-800 p-4 rounded-md">
-                  000000000
+                  {data.num_telephone || "Aucun"}
                 </p>
               </div>
               <div className="mb-4 space-y-2">
                 <h1 className="text-white font-[Sora] font-bold">Lieu</h1>
                 <p className="text-gray-400 font-[Sora] font-light bg-gray-800 p-4 rounded-md">
-                  Example_lieu
+                  {data.adresse_actuel}
                 </p>
               </div>
             </div>
