@@ -7,16 +7,44 @@ use App\Models\Offre;
 use Illuminate\Http\Request;
 
 class OffreController extends Controller
-{   
-    
+{
+
+    public function dashboard()
+    {
+        return response()->json([
+            "message" => "Statistique sur le nombre des offres récupéré avec succès",
+            "resultat" => Offre::count()
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $offres = Offre::with('recruteur.user')->get()->map(function ($offre) {
+            return [
+                'id' => $offre->id,
+                'titre' => $offre->titre_offre,
+                'description' => $offre->description,
+                'created_at' => $offre->created_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                'updated_at' => $offre->updated_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                'recruteur' => [
+                    'id' => $offre->recruteur->id,
+                    'nom' => $offre->recruteur->nom,
+                    'adresse' => $offre->recruteur->adresse_actuel,
+                    'user' => [
+                        'id' => $offre->recruteur->user->id,
+                        'email' => $offre->recruteur->user->email,
+                        'name' => $offre->recruteur->user->name,
+                    ]
+                ],
+            ];
+        });
+
         return response()->json([
-            "message" => "Liste des offres récupéré avec succès",
-            "resultat" => Offre::with(['missions', 'criteres'])->get()
+            "message" => "Liste des offres récupérées avec succès",
+            "resultat" => $offres
         ], 200);
     }
 
@@ -44,16 +72,33 @@ class OffreController extends Controller
      */
     public function show(string $id)
     {
-        $offre = Offre::find($id);
+        $offre = Offre::with(['recruteur.user'])->find($id);
 
         if (!$offre) {
             return response()->json([
                 "message" => "Aucun données correspondante"
             ], 404);
         } else {
+            $data = [
+                'id' => $offre->id,
+                'titre' => $offre->titre_offre,
+                'description' => $offre->description,
+                'created_at' => $offre->created_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                'updated_at' => $offre->updated_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                'recruteur' => $offre->recruteur ? [
+                    'id' => $offre->recruteur->id,
+                    'nom' => $offre->recruteur->nom,
+                    'adresse' => $offre->recruteur->adresse_actuel,
+                    'user' => $offre->recruteur->user ? [
+                        'id' => $offre->recruteur->user->id,
+                        'email' => $offre->recruteur->user->email,
+                        'name' => $offre->recruteur->user->name,
+                    ] : null
+                ] : null,
+            ];
             return response()->json([
                 "message" => "Détail sur l'offre récuperé avec succès",
-                "resultat" => $offre
+                "resultat" => $data
             ], 200);
         }
     }
@@ -73,7 +118,7 @@ class OffreController extends Controller
         $offre->update($data);
 
         return response()->json([
-            "message" => "Offre modifié avec succès", 
+            "message" => "Offre modifié avec succès",
             "data" => $data
         ], 200);
     }
