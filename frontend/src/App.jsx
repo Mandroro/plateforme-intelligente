@@ -24,6 +24,8 @@ import Recruteur from "./components/content/panneau-admin/Recruteur";
 import Utilisateur from "./components/content/panneau-admin/Utilisateur";
 import { ApiUrlConfiguration } from "./ApiUrlConfiguration";
 import ProtectedRouter from "./ProtectedRouter";
+import DetailOffre from "./components/content/site-vitrine/content/DetailOffre";
+import DetailEntreprise from "./components/content/site-vitrine/content/DetailEntreprise";
 
 function App() {
   return (
@@ -35,8 +37,10 @@ function App() {
           <Route index element={<Navigate to="accueil" replace />} />
           <Route path="accueil" element={<Accueil />} />
           <Route path="offres" element={<Offres />} />
+          <Route path="offres/details" element={<DetailOffre/>} />
           <Route path="candidats" element={<Candidats />} />
           <Route path="entreprises" element={<Entreprises />} />
+          <Route path="entreprises/details" element={<DetailEntreprise />} />
         </Route>
 
         <Route path="/authentification" element={<PageAuthentification />} />
