@@ -1,12 +1,20 @@
-import { ArrowRight, BriefcaseBusiness, Globe, MapPin, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import {
+  BriefcaseBusiness,
+  House,
+  Mail,
+  MapPin,
+  Search,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export default function Entreprises() {
-const { ApiURL } = useApiConfig();
+  const { ApiURL } = useApiConfig();
+  const redirection = useNavigate();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 6;
@@ -25,11 +33,12 @@ const { ApiURL } = useApiConfig();
   }, []);
 
   const listeEntreprises = data.map((d) => ({
+    id: d.id,
     image: Logo1,
-    nom: d.user.name,
-    secteur: d.secteur_travail,
-    url:d.url_siteweb,
-    lieu: d.adresse_actuel,
+    nom: d.user.nom,
+    email: d.user.email,
+    secteur: d.secteur,
+    lieu: d.adresse,
   }));
 
   const totalPages = Math.ceil(listeEntreprises.length / dataPerPage);
@@ -42,6 +51,11 @@ const { ApiURL } = useApiConfig();
     setCurrentPage(pageNumber);
   };
 
+  const voirDetail = (id) => {
+    localStorage.setItem("ENTREPRISE_ID_DETAIL", id);
+    redirection("/entreprises/details");
+  };
+
   return (
     <div className="bg-gray-900 py-25">
       <div className="container mx-auto p-8">
@@ -52,16 +66,16 @@ const { ApiURL } = useApiConfig();
                 <BriefcaseBusiness className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-white border border-gray-200 rounded-md p-4 pl-14 font-[Sora] focus:outline-none"
-                  placeholder="Nom de l'entreprise"
+                  placeholder="Secteur de travail"
                 />
               </div>
-              {/* <div className="relative flex items-center w-full mr-2 mb-2 md:mb-0">
+              <div className="relative flex items-center w-full mr-2 mb-2 md:mb-0">
                 <MapPin className="absolute left-4 text-gray-500" />
                 <input
                   className="w-full bg-white border border-gray-200 rounded-md p-4 pl-14 font-[Sora] focus:outline-none"
                   placeholder="Ville, Région"
                 />
-              </div> */}
+              </div>
 
               {/* Affiche button sur mobile */}
               <div className="md:hidden">
@@ -87,22 +101,29 @@ const { ApiURL } = useApiConfig();
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
           {dataToShow.map((l, index) => (
-            <div key={index} className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer">
-              <img
+            <div
+              key={index}
+              onClick={() => voirDetail(l.id)}
+              className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
+            >
+              {/* <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
-              />
+              /> */}
+              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
+                <House className="mr-2 size-20 text-gray-50" />
+              </div>
               <div className="leading-8">
-                <h1 className="text-white font-[Sora] font-bold text-[19px]">
+                <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
                   {l.nom}
                 </h1>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   {/* <BriefcaseBusiness className="mr-2"/> */}
-                  {l.secteur}
+                  Secteur : {l.secteur}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  <Globe className="mr-2"/>
-                  {l.url}
+                  <Mail className="mr-2" />
+                  {l.email}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
@@ -127,19 +148,21 @@ const { ApiURL } = useApiConfig();
             >
               Précédent
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
-                  currentPage === pageNumber
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-800 text-white hover:bg-gray-700 cursor-pointer"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
+                    currentPage === pageNumber
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-800 text-white hover:bg-gray-700 cursor-pointer"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              )
+            )}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
