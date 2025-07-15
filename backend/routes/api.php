@@ -10,7 +10,7 @@ use App\Http\Controllers\API\CritereController;
 use App\Http\Controllers\API\MatchingController;
 use App\Http\Controllers\API\MissionController;
 use App\Http\Controllers\API\UserController;
-use App\Models\Freelancer;
+use App\Models\Critere;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,14 +34,26 @@ Route::post('/connexion', [AuthController::class, 'connexion']);
 // Inscription
 Route::post('/inscription', [AuthController::class, 'inscription']);
 
+// Statistique sur les ressources
+Route::get('/stat-offre', [OffreController::class, 'dashboard']);
+Route::get('/stat-freelancer', [FreelancerController::class, 'dashboard']);
+Route::get('/stat-recruteur', [RecruteurController::class, 'dashboard']);
+
 // Liste des offres disponible 
 Route::get('/liste-des-offres', [OffreController::class, 'index']);
 
+// Details sur un offre
+Route::get('/liste-des-offres/{id}', [OffreController::class, 'show']);
+Route::get('/liste-des-missions/{id}', [MissionController::class, 'show']);
+Route::get('/liste-des-criteres/{id}', [CritereController::class, 'show']);
+
 // Liste des freelancers inscrit
 Route::get('/liste-des-candidats', [FreelancerController::class, 'index']);
+Route::get('/liste-des-candidats/{id}', [FreelancerController::class, 'show']);
 
 // Liste des recruteurs inscrit
 Route::get('/liste-des-entreprises', [RecruteurController::class, 'index']);
+Route::get('/liste-des-entreprises/{id}', [RecruteurController::class, 'show']);
 
 
 // Route API accessible après authentification
