@@ -1,112 +1,54 @@
-import { BriefcaseBusiness, CalendarDays, MapPin, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { BriefcaseBusiness, Building, CalendarDays, House, MapPin, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
-import Logo2 from "./../../images/exemple-logo-societe/ciec-group.jpeg";
-import Logo3 from "./../../images/exemple-logo-societe/circuit.jpeg";
-import Logo4 from "./../../images/exemple-logo-societe/confluence.jpeg";
-import Logo5 from "./../../images/exemple-logo-societe/eci-ingenierie.jpeg";
-import Logo6 from "./../../images/exemple-logo-societe/felixe.jpeg";
-import Logo7 from "./../../images/exemple-logo-societe/holateams.jpeg";
-import Logo8 from "./../../images/exemple-logo-societe/pixoshare.jpeg";
-import Logo9 from "./../../images/exemple-logo-societe/Valsoft.jpeg";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 export default function Offres() {
   const { ApiURL } = useApiConfig();
   const [data, setData] = useState([]);
+  const redirection = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const offresPerPage = 6;
 
-  useEffect(() => {
-    axios.get(`${ApiURL}/liste-des-offres`).then((response) => {
-      if (response.status === 200) {
+useEffect(() => {
+  let isMounted = true;
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${ApiURL}/liste-des-offres`);
+      if (response.status === 200 && isMounted) {
         setData(response.data.resultat);
       }
-    });
-  }, []);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des offres :", error);
+    }
+  };
 
-  // const listeOffre = [
-  //   {
-  //     image: Logo1,
-  //     nom: "Archetype Consulting",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo2,
-  //     nom: "Ciec Group",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo3,
-  //     nom: "Circuit",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo4,
-  //     nom: "Confluence",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo5,
-  //     nom: "ECI Ingénierie",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo6,
-  //     nom: "Felixe",
-  //     poste: "Developpeur ReactJs/NextJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo7,
-  //     nom: "Holateams",
-  //     poste: "Developpeur Frontend ReactJs",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo8,
-  //     nom: "Pixoshare",
-  //     poste: "Developpeur Backend JAVA",
-  //     lieu: "Allemagne",
-  //   },
-  //   {
-  //     image: Logo9,
-  //     nom: "Valsoft",
-  //     poste: "Developpeur FullStack ReactJs/NextJs - Python",
-  //     lieu: "Paris, France",
-  //   },
-  //   {
-  //     image: Logo1,
-  //     nom: "Autre Entreprise 1",
-  //     poste: "Poste 1",
-  //     lieu: "Lieu 1",
-  //   },
-  //   {
-  //     image: Logo2,
-  //     nom: "Autre Entreprise 2",
-  //     poste: "Poste 2",
-  //     lieu: "Lieu 2",
-  //   },
-  //   {
-  //     image: Logo3,
-  //     nom: "Autre Entreprise 3",
-  //     poste: "Poste 3",
-  //     lieu: "Lieu 3",
-  //   },
-  // ];
+  // Appel initial
+  fetchData();
+
+  // Actualisation automatique toutes les 10 secondes
+  const intervalId = setInterval(fetchData, 1000);
+
+  // Nettoyage du composant
+  return () => {
+    isMounted = false;
+    clearInterval(intervalId);
+  };
+}, []);
+
 
   
   const listeOffres = data.map((d) => ({
+    id: d.id,
     image: Logo1,
     nom: d.recruteur.user.name,
-    poste:d.titre_offre,
-    lieu: d.recruteur.adresse_actuel,
+    poste:d.titre,
+    date:d.created_at,
+    lieu: d.recruteur.adresse,
   }));
 
   const totalPages = Math.ceil(listeOffres.length / offresPerPage);
@@ -118,6 +60,14 @@ export default function Offres() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  // Voir les détails sur l'offre
+  const voirDetail = (id) => {
+    console.log("ID_OFFRE:", id);
+    localStorage.setItem("OFFRE_ID_DETAIL", id);
+    redirection(`/offres/details`);
+
+  }
 
   return (
     <div className="bg-gray-900 py-25">
@@ -163,28 +113,32 @@ export default function Offres() {
           </div>
         </div>
         <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
-          {offresToShow.map((l, index) => (
+          {offresToShow.map((l) => (
             <div
-              key={index}
+              key={l.id}
+              onClick={() => voirDetail(l.id)}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
             >
-              <img
+              {/* <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
-              />
+              /> */}
+              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
+                <House className="mr-2 size-20 text-gray-50"/>
+              </div>
               <div className="leading-8">
-                <h1 className="text-white font-[Sora] font-bold text-[19px]">
+                <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
                   {l.nom}
                 </h1>
                 <p className="text-gray-500 font-[Sora] font-light text-[15px]">
-                  {l.poste}
+                  Offre : {l.poste}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  <CalendarDays className="mr-2" />5 Mai 2025
+                  <CalendarDays className="mr-2" />Publié le : {l.date}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
-                  {l.lieu}
+                  Lieu : {l.lieu}
                 </p>
               </div>
             </div>

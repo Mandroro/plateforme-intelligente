@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import HeroImage from "./../../images/image-hero.png";
 import AboutImage from "./../../images/image-about.png";
 import { NavLink } from "react-router";
@@ -7,14 +7,66 @@ import {
   ClipboardList,
   Globe,
   House,
-  Mail,
   Search,
   Send,
   Settings,
   User,
   Users,
 } from "lucide-react";
+import { useApiConfig } from "../../../ApiUrlConfiguration";
+import axios from "axios";
+
 export default function Accueil() {
+  const { ApiURL } = useApiConfig();
+  const [statOffre, setStatOffre] = useState(0);
+  const [statFreelancer, setStatFreelancer] = useState(0);
+  const [statRecruteur, setStatRecruteur] = useState(0);
+
+  useEffect(() => {
+    nombreOffre();
+    nombreFreelancer();
+    nombreRecruteur();
+  }, []);
+
+  const nombreOffre = () => {
+    axios
+      .get(`${ApiURL}/stat-offre`)
+      .then((response) => {
+        if (response.status === 200) {
+          setStatOffre(response.data.resultat);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
+  const nombreFreelancer = () => {
+    axios
+      .get(`${ApiURL}/stat-freelancer`)
+      .then((response) => {
+        if (response.status === 200) {
+          setStatFreelancer(response.data.resultat);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
+  const nombreRecruteur = () => {
+    axios
+      .get(`${ApiURL}/stat-recruteur`)
+      .then((response) => {
+        if (response.status === 200) {
+          setStatRecruteur(response.data.resultat);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
   return (
     <>
       {/* Section Bienvenu */}
@@ -35,7 +87,10 @@ export default function Accueil() {
                 dés-maintenant si vous n'avez pas encore de compte.
               </p>
               <div className="md:flex md:space-x-2 md:space-y-0 space-y-3 mb-18">
-                <NavLink to="/offres" className="text-white w-full md:w-1/3 bg-green-600 font-[Sora] font-light text-[14px] p-3 rounded-md flex items-center justify-center cursor-pointer">
+                <NavLink
+                  to="/offres"
+                  className="text-white w-full md:w-1/3 bg-green-600 font-[Sora] font-light text-[14px] p-3 rounded-md flex items-center justify-center cursor-pointer"
+                >
                   Voir les offres disponibles
                 </NavLink>
                 <NavLink
@@ -54,10 +109,10 @@ export default function Accueil() {
                   </div>
                   <div className="justify-items-center md:ml-2">
                     <h5 className="text-white text-[30px] font-[Sora] font-bold leading-none">
-                      100
+                      {statOffre}
                     </h5>
                     <h6 className="text-[16px] font-[Sora] font-light text-white">
-                      Missions
+                      Opportunité
                     </h6>
                   </div>
                 </div>
@@ -67,10 +122,10 @@ export default function Accueil() {
                   </div>
                   <div className="justify-items-center md:ml-2">
                     <h5 className="text-white text-[30px] font-[Sora] font-bold leading-none">
-                      100
+                      {statFreelancer}
                     </h5>
                     <h6 className="text-[16px] font-[Sora] font-light text-gray-300">
-                      Freelancers
+                      Freelancer
                     </h6>
                   </div>
                 </div>
@@ -80,10 +135,10 @@ export default function Accueil() {
                   </div>
                   <div className="justify-items-center md:ml-2">
                     <h5 className="text-white text-[30px] font-[Sora] font-bold leading-none">
-                      100
+                      {statRecruteur}
                     </h5>
                     <h6 className="text-[16px] font-[Sora] font-light text-gray-300">
-                      Entreprises
+                      Entreprise
                     </h6>
                   </div>
                 </div>

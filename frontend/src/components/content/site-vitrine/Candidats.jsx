@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Mail, MapPin, Search } from "lucide-react";
+import { BriefcaseBusiness, Mail, MapPin, Search, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import Profil1 from "./../../images/exemple-profil-candidat/1.png";
 import Profil2 from "./../../images/exemple-profil-candidat/2.jpeg";
@@ -34,7 +34,7 @@ export default function Candidats() {
     image: Profil1,
     nom: d.user.name,
     poste: d.poste_travail,
-    email:d.user.email,
+    email: d.user.email,
     lieu: d.adresse_actuel,
   }));
 
@@ -97,10 +97,13 @@ export default function Candidats() {
               key={index}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
             >
-              <img
+              {/* <img
                 src={l.image}
                 className="hidden md:flex rounded-md w-1/4 mr-6"
-              />
+              /> */}
+              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
+                <User className="mr-2 size-20 text-gray-50" />
+              </div>
               <div className="leading-8">
                 <h1 className="text-white font-[Sora] font-bold text-[19px] mb-1">
                   {l.nom}
