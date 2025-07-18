@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import Profil1 from "./../../images/exemple-profil-candidat/1.png";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export default function Candidats() {
   const { ApiURL } = useApiConfig();
+  const redirection = useNavigate();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 6;
