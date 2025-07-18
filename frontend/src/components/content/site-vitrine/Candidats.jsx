@@ -1,13 +1,6 @@
 import { BriefcaseBusiness, Mail, MapPin, Search, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import Profil1 from "./../../images/exemple-profil-candidat/1.png";
-import Profil2 from "./../../images/exemple-profil-candidat/2.jpeg";
-import Profil3 from "./../../images/exemple-profil-candidat/3.jpeg";
-import Profil4 from "./../../images/exemple-profil-candidat/4.jpeg";
-import Profil5 from "./../../images/exemple-profil-candidat/5.jpeg";
-import Profil6 from "./../../images/exemple-profil-candidat/6.jpeg";
-import Profil7 from "./../../images/exemple-profil-candidat/7.jpg";
-import Profil8 from "./../../images/exemple-profil-candidat/8.jpeg";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
 
@@ -18,7 +11,15 @@ export default function Candidats() {
   const dataPerPage = 6;
 
   useEffect(() => {
-    axios
+    donneesCandidats();
+    const interval = setInterval(donneesCandidats, 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
+
+  const donneesCandidats = () => {
+        axios
       .get(`${ApiURL}/liste-des-candidats`)
       .then((response) => {
         if (response.status === 200) {
@@ -28,14 +29,15 @@ export default function Candidats() {
       .catch((error) => {
         console.log("Erreur inattendue: ", error);
       });
-  }, []);
+  }
 
   const listeCandidats = data.map((d) => ({
+    id: d.id,
     image: Profil1,
-    nom: d.user.name,
-    poste: d.poste_travail,
+    nom: d.user.nom,
+    poste: d.poste,
     email: d.user.email,
-    lieu: d.adresse_actuel,
+    lieu: d.adresse,
   }));
 
   const totalPages = Math.ceil(listeCandidats.length / dataPerPage);
@@ -46,6 +48,11 @@ export default function Candidats() {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const voirDetail = (id) => {
+    localStorage.setItem("CANDIDAT_ID_DETAIL", id);
+    redirection("/candidats/details");
   };
 
   return (
@@ -95,6 +102,7 @@ export default function Candidats() {
           {dataToShow.map((l, index) => (
             <div
               key={index}
+              onClick={() => voirDetail(l.id)}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
             >
               {/* <img
@@ -109,8 +117,7 @@ export default function Candidats() {
                   {l.nom}
                 </h1>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  {/* <BriefcaseBusiness className="mr-2" /> */}
-                  {l.poste}
+                  Poste : {l.poste}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   <Mail className="mr-2" />

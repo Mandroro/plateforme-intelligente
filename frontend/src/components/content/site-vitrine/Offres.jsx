@@ -1,10 +1,15 @@
-import { BriefcaseBusiness, Building, CalendarDays, House, MapPin, Search } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CalendarDays,
+  House,
+  MapPin,
+  Search,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 export default function Offres() {
   const { ApiURL } = useApiConfig();
@@ -13,41 +18,33 @@ export default function Offres() {
   const [currentPage, setCurrentPage] = useState(1);
   const offresPerPage = 6;
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    donneesOffres();
+    const interval = setInterval(donneesOffres, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`${ApiURL}/liste-des-offres`);
-      if (response.status === 200 && isMounted) {
-        setData(response.data.resultat);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des offres :", error);
-    }
+  const donneesOffres = () => {
+    axios
+      .get(`${ApiURL}/liste-des-offres`)
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data.resultat);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
   };
 
-  // Appel initial
-  fetchData();
-
-  // Actualisation automatique toutes les 10 secondes
-  const intervalId = setInterval(fetchData, 1000);
-
-  // Nettoyage du composant
-  return () => {
-    isMounted = false;
-    clearInterval(intervalId);
-  };
-}, []);
-
-
-  
   const listeOffres = data.map((d) => ({
     id: d.id,
     image: Logo1,
     nom: d.recruteur.user.name,
-    poste:d.titre,
-    date:d.created_at,
+    poste: d.titre,
+    date: d.created_at,
     lieu: d.recruteur.adresse,
   }));
 
@@ -63,11 +60,9 @@ useEffect(() => {
 
   // Voir les détails sur l'offre
   const voirDetail = (id) => {
-    console.log("ID_OFFRE:", id);
     localStorage.setItem("OFFRE_ID_DETAIL", id);
-    redirection(`/offres/details`);
-
-  }
+    redirection("/offres/details");
+  };
 
   return (
     <div className="bg-gray-900 py-25">
@@ -124,7 +119,7 @@ useEffect(() => {
                 className="hidden md:flex rounded-md w-1/4 mr-6"
               /> */}
               <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
-                <House className="mr-2 size-20 text-gray-50"/>
+                <House className="mr-2 size-20 text-gray-50" />
               </div>
               <div className="leading-8">
                 <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
@@ -134,11 +129,12 @@ useEffect(() => {
                   Offre : {l.poste}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  <CalendarDays className="mr-2" />Publié le : {l.date}
+                  <CalendarDays className="mr-2" />
+                  Publié le : {l.date}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
-                  Lieu : {l.lieu}
+                  {l.lieu}
                 </p>
               </div>
             </div>

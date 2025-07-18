@@ -20,7 +20,15 @@ export default function Entreprises() {
   const dataPerPage = 6;
 
   useEffect(() => {
-    axios
+    donneesEntreprises();
+    const interval = setInterval(donneesEntreprises, 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
+
+  const donneesEntreprises = () => {
+        axios
       .get(`${ApiURL}/liste-des-entreprises`)
       .then((response) => {
         if (response.status === 200) {
@@ -30,7 +38,7 @@ export default function Entreprises() {
       .catch((error) => {
         console.log("Erreur inattendue: ", error);
       });
-  }, []);
+  }
 
   const listeEntreprises = data.map((d) => ({
     id: d.id,

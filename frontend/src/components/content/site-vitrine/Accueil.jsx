@@ -26,6 +26,17 @@ export default function Accueil() {
     nombreOffre();
     nombreFreelancer();
     nombreRecruteur();
+
+    const intervalNbOffre = setInterval(nombreOffre, 1000);
+    const intervalNbFreelancer = setInterval(nombreFreelancer, 1000);
+    const intervalNbRecruteur = setInterval(nombreRecruteur, 1000);
+
+    return () => {
+      clearInterval(intervalNbOffre);
+      clearInterval(intervalNbFreelancer);
+      clearInterval(intervalNbRecruteur);
+    };
+
   }, []);
 
   const nombreOffre = () => {
