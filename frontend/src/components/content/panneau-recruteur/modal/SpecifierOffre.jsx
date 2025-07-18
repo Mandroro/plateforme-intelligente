@@ -74,7 +74,6 @@ export default function SpecifierOffre({ id, open, fermerSpecifierOffre }) {
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log(response.data.message);
           setMission("");
           fetchMissions(); // actualiser la liste des missions
         }
@@ -101,7 +100,6 @@ export default function SpecifierOffre({ id, open, fermerSpecifierOffre }) {
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log(response.data.message);
           setCompetence("");
           fetchCompetences(); // actualiser la liste des compétences
         }
