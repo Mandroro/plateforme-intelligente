@@ -26,6 +26,7 @@ import { ApiUrlConfiguration } from "./ApiUrlConfiguration";
 import ProtectedRouter from "./ProtectedRouter";
 import DetailOffre from "./components/content/site-vitrine/content/DetailOffre";
 import DetailEntreprise from "./components/content/site-vitrine/content/DetailEntreprise";
+import DetailCandidat from "./components/content/site-vitrine/content/DetailCandidat";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="offres" element={<Offres />} />
           <Route path="offres/details" element={<DetailOffre/>} />
           <Route path="candidats" element={<Candidats />} />
+          <Route path="candidats/details" element={<DetailCandidat/>} />
           <Route path="entreprises" element={<Entreprises />} />
           <Route path="entreprises/details" element={<DetailEntreprise />} />
         </Route>
