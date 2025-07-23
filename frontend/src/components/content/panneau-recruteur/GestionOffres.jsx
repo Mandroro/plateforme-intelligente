@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -7,6 +6,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,7 +17,16 @@ import {
   Search,
   Trash,
 } from "lucide-react";
-import { Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Chip,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import NouveauOffre from "./modal/NouveauOffre";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
@@ -27,7 +38,7 @@ export default function GestionOffres() {
   const token = localStorage.getItem("token");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -36,6 +47,15 @@ export default function GestionOffres() {
   const [openModifierOffre, setOpenModifierOffre] = useState(false);
 
   useEffect(() => {
+    fetchOffre();
+
+    const interval = setInterval(fetchOffre, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const fetchOffre = () => {
     axios
       .get(`${ApiURL}/offres`, {
         headers: {
@@ -43,53 +63,52 @@ export default function GestionOffres() {
         },
       })
       .then((response) => {
-        console.log(response.data.resultat);
         setData(response.data.resultat);
       })
       .catch((error) => {
         console.log("Erreur inattendue:", error);
       });
-  }, []);
+  };
 
-  const columns = [
-    { id: "titre", label: "Titre", minWidth: 100 },
-    { id: "date", label: "Date", minWidth: 100 },
-    { id: "action", label: "", minWidth: 10 },
-  ];
+  // const columns = [
+  //   { id: "titre", label: "Titre", minWidth: 100 },
+  //   { id: "date", label: "Date", minWidth: 100 },
+  //   { id: "action", label: "", minWidth: 10 },
+  // ];
 
-  function createData(titre, date, action) {
-    return { titre, date, action };
-  }
+  // function createData(titre, date, action) {
+  //   return { titre, date, action };
+  // }
 
-  const rows = data.map((d) =>
-    createData(
-      d.titre_offre,
-      d.created_at,
-      <div className="flex space-x-1">
-        <Tooltip title="Spécifier l'offre">
-          <button
-            onClick={() => ouvrirSpecifierOffre(d.id)}
-            className="bg-gray-600 p-2 rounded-md cursor-pointer"
-          >
-            <Plus />
-          </button>
-        </Tooltip>
-        <Tooltip title="Modifier l'offre">
-          <button
-            onClick={() => ouvrirModifierOffre(d.id)}
-            className="bg-gray-600 p-2 rounded-md cursor-pointer"
-          >
-            <PenBox />
-          </button>
-        </Tooltip>
-        <Tooltip title="Supprimer l'offre">
-          <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-            <Trash />
-          </button>
-        </Tooltip>
-      </div>
-    )
-  );
+  // const rows = data.map((d) =>
+  //   createData(
+  //     d.titre,
+  //     d.created_at,
+  //     <div className="flex space-x-1">
+  //       <Tooltip title="Spécifier l'offre">
+  //         <button
+  //           onClick={() => ouvrirSpecifierOffre(d.id)}
+  //           className="bg-gray-600 p-2 rounded-md cursor-pointer"
+  //         >
+  //           <Plus />
+  //         </button>
+  //       </Tooltip>
+  //       <Tooltip title="Modifier l'offre">
+  //         <button
+  //           onClick={() => ouvrirModifierOffre(d.id)}
+  //           className="bg-gray-600 p-2 rounded-md cursor-pointer"
+  //         >
+  //           <PenBox />
+  //         </button>
+  //       </Tooltip>
+  //       <Tooltip title="Supprimer l'offre">
+  //         <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
+  //           <Trash />
+  //         </button>
+  //       </Tooltip>
+  //     </div>
+  //   )
+  // );
 
   // Ajout d'une offre
   const ouvrirFormulaireOffre = () => {
@@ -117,47 +136,24 @@ export default function GestionOffres() {
     setOpenModifierOffre(false);
   };
 
-  // Calcul de la pagination
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = rows.slice(indexOfFirstRow, indexOfLastRow);
-
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
   return (
-    <div className="p-6 md:p-4">
+    <div className="p-6 md:p-10">
       <div className="md:flex items-center justify-between mb-4">
-        <h1 className="text-white font-[Sora] text-[15px] mb-4 md:mb-0">
-          Liste des offres publié
-        </h1>
+        <div className="font-[Sora]">
+          <h1 className="text-white font-bold text-[25px]">
+            Gestion des offres
+          </h1>
+          <p className="text-gray-200 font-extralight text-[15px]">
+            Voici la liste des offres déjà publié
+          </p>
+        </div>
         <div className="flex items-center space-x-1">
-          <div className="relative flex-grow flex items-center w-full">
-            <Search className="absolute left-4 text-gray-500" />
-            <input
-              className="w-full bg-white border border-gray-200 rounded-md p-2 pl-14 font-[Sora] focus:outline-none"
-              placeholder="Je chercher..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
           <button
             onClick={ouvrirFormulaireOffre}
             className="hidden md:flex p-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-[Sora] items-center justify-center w-full"
           >
             <Plus className="text-white mr-2" />
-            Nouveau
+            Publier une offre
           </button>
 
           {/* Bouton mobile */}
@@ -166,109 +162,141 @@ export default function GestionOffres() {
           </button>
         </div>
       </div>
-      <Paper sx={{ width: "100%", overflow: "hidden", bgcolor: "#1e2939" }}>
-        <TableContainer>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{
-                      minWidth: column.minWidth,
-                      fontWeight: "bold",
-                      color: "#fff",
-                      backgroundColor: "#364153",
-                      fontFamily: "Sora",
-                      borderColor: "#1e2939",
-                    }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {currentRows.length > 0 ? ( // Condition pour vérifier si des données sont présentes
-                currentRows.map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
+
+      <div className="grid grid-cols-6 gap-4">
+        {data.length > 0
+          ? data.map((d) => (
+              <div className="col-span-6 bg-gray-800 p-2">
+                <div className="flex items-center justify-between p-4">
+                  <div className="flex items-center">
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar
+                          variant="square"
+                          sx={{
+                            width: 100,
+                            height: 100,
+                            borderRadius: 2,
+                            mr: 4,
+                            bgcolor: "oklch(96.2% 0.044 156.743)",
+                          }}
+                        >
+                          <Typography
                             sx={{
                               fontFamily: "Sora",
-                              fontSize: "14px",
-                              color: "#fff",
-                              borderColor: "#1e2939",
-                              justifyItems: "end",
+                              fontSize: "60px",
+                              color: "oklch(62.7% 0.194 149.214)",
                             }}
                           >
-                            {value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })
-              ) : (
-                // Afficher le message si aucune donnée n'est trouvée
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    align="center"
-                    sx={{
-                      color: "#fff",
-                      fontFamily: "Sora",
-                      fontSize: "16px",
-                      borderColor: "#1e2939",
-                    }}
-                  >
-                    Aucune donnée correspondante
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
-      {/* Pagination */}
-      {rows.length > 0 && ( // Afficher la pagination seulement s'il y a des données filtrées
-        <div className="flex justify-center mt-4 space-x-2">
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className="px-4 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePageChange(i + 1)}
-              className={`px-4 py-2 rounded-md ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 text-white hover:bg-gray-600"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight />
-          </button>
-        </div>
-      )}
+                            {d.titre.charAt(0)}
+                          </Typography>
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <div className="flex items-center">
+                            <Typography
+                              variant="h5"
+                              sx={{
+                                fontFamily: "Sora",
+                                fontWeight: "semibold",
+                                mr: 4,
+                                color: "white",
+                              }}
+                            >
+                              {d.titre}
+                            </Typography>
+                          </div>
+                        }
+                        secondary={
+                          <ul className="space-y-1">
+                            <li className="mb-3">
+                              <Typography
+                                variant="p"
+                                sx={{
+                                  fontFamily: "Sora",
+                                  fontWeight: 100,
+                                  color: "white",
+                                }}
+                              >
+                                Publié le {d.created_at}
+                              </Typography>
+                            </li>
+                            <li className="space-x-1">
+                              <Chip
+                                onClick={() => ouvrirSpecifierOffre(d.id)}
+                                sx={{
+                                  fontFamily: "Sora",
+                                  cursor: "pointer",
+                                  color: "white",
+                                  background: "none",
+                                  ":hover": {
+                                    background: "none",
+                                    color: "oklch(70.7% 0.165 254.624)",
+                                    "& .MuiSvgIcon-root": {
+                                      color: "oklch(70.7% 0.165 254.624)",
+                                    },
+                                  },
+                                  "& .MuiSvgIcon-root": {
+                                    color: "white",
+                                  },
+                                }}
+                                icon={<AddOutlinedIcon />}
+                                label="Spécifier l'offre"
+                              />
+                              <Chip
+                                onClick={() => ouvrirModifierOffre(d.id)}
+                                sx={{
+                                  fontFamily: "Sora",
+                                  color: "white",
+                                  background: "none",
+                                  cursor: "pointer",
+                                  ":hover": {
+                                    background: "none",
+                                    color: "oklch(70.7% 0.165 254.624)",
+                                    "& .MuiSvgIcon-root": {
+                                      color: "oklch(70.7% 0.165 254.624)",
+                                    },
+                                  },
+                                  "& .MuiSvgIcon-root": {
+                                    color: "white",
+                                  },
+                                }}
+                                icon={<EditOutlinedIcon />}
+                                label="Modifier l'offre"
+                              />
+                              <Chip
+                                sx={{
+                                  fontFamily: "Sora",
+                                  cursor: "pointer",
+                                  color: "white",
+                                  background: "none",
+                                  ":hover": {
+                                    background: "none",
+                                    color: "oklch(70.4% 0.191 22.216)",
+                                    "& .MuiSvgIcon-root": {
+                                      color: "oklch(70.4% 0.191 22.216)",
+                                    },
+                                  },
+                                  "& .MuiSvgIcon-root": {
+                                    color: "white",
+                                  },
+                                }}
+                                icon={<DeleteOutlineOutlinedIcon />}
+                                label="Supprimer l'offre"
+                              />
+                            </li>
+                          </ul>
+                        }
+                      />
+                    </ListItem>
+                  </div>
+                  {/* <Button variant="contained" sx={{fontFamily:"Sora", fontWeight:300, borderRadius:50, textTransform:"inherit"}}>Plus de détails</Button> */}
+                </div>
+              </div>
+            ))
+          : ""}
+      </div>
 
       {/* Formulaire offre */}
       <NouveauOffre
