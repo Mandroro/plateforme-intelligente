@@ -31,7 +31,15 @@ export default function CompteFreelancer() {
   const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
-    axios
+    donneesUtilisateur();
+    const interval = setInterval(donneesUtilisateur, 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
+
+  const donneesUtilisateur = () => {
+        axios
       .get(`${ApiURL}/utilisateur`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,7 +54,7 @@ export default function CompteFreelancer() {
       .catch((error) => {
         console.log("Erreur inattendue:", error);
       });
-  }, []);
+  }
 
   const freelancer = (id) => {
     axios
@@ -125,7 +133,6 @@ export default function CompteFreelancer() {
       .then((response) => {
         if (response.status === 200) {
           setNewPassword("");
-          console.log(response.data.message);
         }
       }).catch((error) => {
         console.log("Erreur inattendue:", error);
@@ -135,8 +142,8 @@ export default function CompteFreelancer() {
   return (
     <>
       <div className="bg-gray-800 p-18 md:p-20 relative mb-12 md:mb-13">
-        <div className="absolute top-5 left-4">
-          <img className="rounded-full w-50" src={Profil1} />
+        <div className="absolute top-14 left-8 text-center bg-green-700 font-[Sora] w-40 h-40 rounded-full">
+          <h1 className="text-[110px] text-white uppercase">{nom.charAt(0)}</h1>
         </div>
       </div>
       <div className="p-8 space-y-2">

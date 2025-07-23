@@ -19,9 +19,17 @@ export default function CompteRecruteur() {
   const [open, setOpen] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
 
   useEffect(() => {
+    donneesUtilisateur();
+    const interval = setInterval(donneesUtilisateur, 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  }, [])
+
+  const donneesUtilisateur = () => {
     axios.get(`${ApiURL}/utilisateur`,{
       headers:{
         "Authorization":`Bearer ${token}`
@@ -34,7 +42,7 @@ export default function CompteRecruteur() {
     }).catch((error) => {
       console.log("Erreur inattendue:", error);
     })
-  }, [])
+  }
 
   const recruteur = (id) => {
     axios.get(`${ApiURL}/recruteurs/${id}`, {
@@ -45,7 +53,7 @@ export default function CompteRecruteur() {
       setSecteurTravail(response.data.resultat.recruteur.secteur_travail);
       setUrlSite(response.data.resultat.recruteur.url_siteweb);
       setAdresse(response.data.resultat.recruteur.adresse_actuel);
-      setTelephone(response.data.resultat.recruteur.numero_telephone);
+      setTelephone(response.data.resultat.recruteur.num_telephone);
     }).catch((error) => {
       console.log("Erreur inattendue:", error);
     })
@@ -58,11 +66,36 @@ export default function CompteRecruteur() {
     setOpen(false);
   };
 
+    // Gérer mot de passe
+  const changerMotpasse = (e) => {
+    e.preventDefault();
+
+    const data = {
+      password: newPassword,
+    };
+
+    axios
+      .put(`${ApiURL}/utilisateurs/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setNewPassword("");
+          console.log(response.data.message);
+        }
+      }).catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
   return (
     <>
       <div className="bg-gray-800 p-18 md:p-20 relative mb-18 md:mb-14">
-        <div className="absolute top-14 left-8">
-          <img className="rounded-md w-60" src={Profil1} />
+        <div className="absolute top-14 left-8 text-center bg-green-700 font-[Sora] w-40 h-40 rounded-full">
+          <h1 className="text-[110px] text-white uppercase">{nom.charAt(0)}</h1>
         </div>
       </div>
 
@@ -149,31 +182,21 @@ export default function CompteRecruteur() {
             Gérer le mot de passe de mon compte
           </h1>
           <div className="grid grid-cols-6 gap-2 mb-4">
-            <div className="col-start-1 col-end-7 md:col-end-4 bg-gray-800 rounded-md p-4">
+            <div className="col-start-1 col-end-7 bg-gray-800 rounded-md p-4">
               <label className="text-white font-[Sora]">
                 Nouveau mot de passe
               </label>
               <input
                 className=" w-full border-gray-200 text-gray-500 font-[Sora] focus:outline-none"
-                placeholder="Saisir un nouveau mot de passe "
+                type="password"
+                placeholder="Saisir le nouveau mot de passe "
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
-            <div className="col-start-1 md:col-start-4 col-end-7 bg-gray-800 rounded-md p-4">
-              <label className="text-white font-[Sora]">
-                Confirmation du mot de passe
-              </label>
-              <input
-                className="w-full border-gray-200 text-gray-500  font-[Sora] focus:outline-none"
-                placeholder="Confirmer votre mot de passe"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
           </div>
           <div className="md:text-end">
-            <Button variant="contained" onClick={null} sx={{fontFamily:"Sora", fontSize:13, textTransform:"inherit"}}>
+            <Button variant="contained" onClick={changerMotpasse} sx={{fontFamily:"Sora", fontSize:13, textTransform:"inherit"}}>
               Mettre à jour le mot de passe
             </Button>
           </div>
