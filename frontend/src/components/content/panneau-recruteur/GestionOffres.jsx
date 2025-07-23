@@ -36,9 +36,7 @@ import SpecifierOffre from "./modal/SpecifierOffre";
 export default function GestionOffres() {
   const { ApiURL } = useApiConfig();
   const token = localStorage.getItem("token");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -47,17 +45,28 @@ export default function GestionOffres() {
   const [openModifierOffre, setOpenModifierOffre] = useState(false);
 
   useEffect(() => {
-    fetchOffre();
-
-    const interval = setInterval(fetchOffre, 1000);
+    recruteur();
+    const interval = setInterval(recruteur, 8000);
     return () => {
       clearInterval(interval);
     };
   }, []);
 
-  const fetchOffre = () => {
+  const recruteur = () => {
     axios
-      .get(`${ApiURL}/offres`, {
+      .get(`${ApiURL}/utilisateur`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        fetchOffre(response.data.id);
+      });
+  };
+
+  const fetchOffre = (id) => {
+    axios
+      .get(`${ApiURL}/liste-offres/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,46 +78,6 @@ export default function GestionOffres() {
         console.log("Erreur inattendue:", error);
       });
   };
-
-  // const columns = [
-  //   { id: "titre", label: "Titre", minWidth: 100 },
-  //   { id: "date", label: "Date", minWidth: 100 },
-  //   { id: "action", label: "", minWidth: 10 },
-  // ];
-
-  // function createData(titre, date, action) {
-  //   return { titre, date, action };
-  // }
-
-  // const rows = data.map((d) =>
-  //   createData(
-  //     d.titre,
-  //     d.created_at,
-  //     <div className="flex space-x-1">
-  //       <Tooltip title="Spécifier l'offre">
-  //         <button
-  //           onClick={() => ouvrirSpecifierOffre(d.id)}
-  //           className="bg-gray-600 p-2 rounded-md cursor-pointer"
-  //         >
-  //           <Plus />
-  //         </button>
-  //       </Tooltip>
-  //       <Tooltip title="Modifier l'offre">
-  //         <button
-  //           onClick={() => ouvrirModifierOffre(d.id)}
-  //           className="bg-gray-600 p-2 rounded-md cursor-pointer"
-  //         >
-  //           <PenBox />
-  //         </button>
-  //       </Tooltip>
-  //       <Tooltip title="Supprimer l'offre">
-  //         <button className="bg-gray-600 p-2 rounded-md cursor-pointer">
-  //           <Trash />
-  //         </button>
-  //       </Tooltip>
-  //     </div>
-  //   )
-  // );
 
   // Ajout d'une offre
   const ouvrirFormulaireOffre = () => {
@@ -165,8 +134,8 @@ export default function GestionOffres() {
 
       <div className="grid grid-cols-6 gap-4">
         {data.length > 0
-          ? data.map((d) => (
-              <div className="col-span-6 bg-gray-800 p-2">
+          ? data.map((d, index) => (
+              <div className="col-span-6 bg-gray-800 p-2" key={index}>
                 <div className="flex items-center justify-between p-4">
                   <div className="flex items-center">
                     <ListItem>
