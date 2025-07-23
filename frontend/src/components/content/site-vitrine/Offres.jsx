@@ -20,7 +20,7 @@ export default function Offres() {
 
   useEffect(() => {
     donneesOffres();
-    const interval = setInterval(donneesOffres, 1000);
+    const interval = setInterval(donneesOffres, 8000);
     return () => {
       clearInterval(interval);
     };

@@ -21,7 +21,7 @@ export default function Entreprises() {
 
   useEffect(() => {
     donneesEntreprises();
-    const interval = setInterval(donneesEntreprises, 1000);
+    const interval = setInterval(donneesEntreprises, 8000);
     return () => {
       clearInterval(interval);
     }

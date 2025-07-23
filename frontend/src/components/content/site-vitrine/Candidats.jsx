@@ -14,7 +14,7 @@ export default function Candidats() {
 
   useEffect(() => {
     donneesCandidats();
-    const interval = setInterval(donneesCandidats, 1000);
+    const interval = setInterval(donneesCandidats, 8000);
     return () => {
       clearInterval(interval);
     }
