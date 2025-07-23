@@ -9,12 +9,103 @@ use Illuminate\Http\Request;
 class OffreController extends Controller
 {
 
+    // Nombre de tous les offres disponibles
     public function dashboard()
     {
         return response()->json([
-            "message" => "Statistique sur le nombre des offres récupéré avec succès",
             "resultat" => Offre::count()
         ]);
+    }
+
+    // Nombre d'offre publié par un recruteur
+    public function dashboardById(string $id)
+    {
+        return response()->json([
+            "resultat" => Offre::where('recruteur_id', $id)->count()
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'titre_offre' => 'nullable',
+            'adresse_actuel' => 'nullable',
+        ]);
+
+        if (!$request->filled('poste_travail') && !$request->filled('adresse_actuel')) {
+            return response()->json([
+                'message' => 'Veuillez fournir au moins un critère de recherche.',
+                'resultat' => [],
+            ], 400);
+        }
+
+        $resultat = Offre::with('recruteur.user')
+            ->whereNotNull('secteur_travail')
+            ->whereNotNull('adresse_actuel')
+            ->when($request->filled('secteur_travail'), function ($query) use ($request) {
+                $query->where('secteur_travail', 'LIKE', '%' . $request->secteur_travail . '%');
+            })
+            ->when($request->filled('adresse_actuel'), function ($query) use ($request) {
+                $query->where('adresse_actuel', 'LIKE', '%' . $request->adresse_actuel . '%');
+            })
+            ->get()
+            ->map(function ($offre) {
+                return [
+                    'id' => $offre->id,
+                    'titre' => $offre->titre_offre,
+                    'description' => $offre->description,
+                    'created_at' => $offre->created_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                    'updated_at' => $offre->updated_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                    'recruteur' => [
+                        'id' => $offre->recruteur->id,
+                        'nom' => $offre->recruteur->nom,
+                        'adresse' => $offre->recruteur->adresse_actuel,
+                        'user' => [
+                            'id' => $offre->recruteur->user->id,
+                            'email' => $offre->recruteur->user->email,
+                            'name' => $offre->recruteur->user->name,
+                        ]
+                    ],
+                ];
+            });
+
+        return response()->json([
+            "message" => "Résultat de recherche récupéré avec succès",
+            "resultat" => $resultat
+        ], 200);
+    }
+
+    public function listeOffreById(string $id)
+    {
+        $offres = Offre::with('recruteur.user')
+            ->whereHas('recruteur.user', function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->get()
+            ->map(function ($offre) {
+                return [
+                    'id' => $offre->id,
+                    'titre' => $offre->titre_offre,
+                    'description' => $offre->description,
+                    'created_at' => $offre->created_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                    'updated_at' => $offre->updated_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                    'recruteur' => [
+                        'id' => $offre->recruteur->id,
+                        'nom' => $offre->recruteur->nom,
+                        'adresse' => $offre->recruteur->adresse_actuel,
+                        'user' => [
+                            'id' => $offre->recruteur->user->id,
+                            'email' => $offre->recruteur->user->email,
+                            'name' => $offre->recruteur->user->name,
+                        ]
+                    ],
+                ];
+            });
+
+        return response()->json([
+            "message" => "Liste des offres récupérées avec succès",
+            "resultat" => $offres
+        ], 200);
     }
 
     /**

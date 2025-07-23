@@ -40,7 +40,7 @@ class MissionController extends Controller
         return response()->json([
             "message" => "Mission ajouté avec succès",
             "resultat" => $mission
-        ], 200);
+        ], 201);
     }
 
     /**

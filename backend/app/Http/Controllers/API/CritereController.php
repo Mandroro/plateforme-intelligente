@@ -40,7 +40,7 @@ class CritereController extends Controller
         return response()->json([
             "message" => "Critère ajouté avec succès",
             "resultat" => $critere
-        ], 200);
+        ], 201);
     }
 
     /**

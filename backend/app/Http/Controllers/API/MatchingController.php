@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Http;
 class MatchingController extends Controller
 {
     // Matching automatique pour afficher la liste des quatre(04) offres idéal à un profil spécifique
-    public function matchingByOffre()
+
+    public function matchingByOffre(string $id)
     {
         // Récupérer les données du freelancer
-        $freelancer = Freelancer::with(['formations', 'competences'])->findOrFail(1);
-        $offres = Offre::with(['missions', 'criteres'])->get();
+        $freelancer = Freelancer::with(['formations', 'competences'])->findOrFail($id);
+        $offres = Offre::with(['recruteur.user', 'missions', 'criteres'])->get();
 
         // Préparer le texte du freelancer
         $sourceSentence = implode(', ', array_merge(
@@ -60,10 +61,14 @@ class MatchingController extends Controller
                 default      => 'non compatible',
             };
 
+            // Format de la date en français
+            $formattedDate = $offre->created_at->locale('fr')->isoFormat('DD MMMM YYYY');
+
             return [
                 'offre' => $offre,
                 'score' => $score,
-                'niveau' => $niveau
+                'niveau' => $niveau,
+                'created_at' => $formattedDate,
             ];
         })->sortByDesc('score')->take(4)->values();
 
@@ -77,6 +82,7 @@ class MatchingController extends Controller
             'matched_offres' => $matched
         ]);
     }
+
 
     // Matching automatique pour afficher la liste quatre(04) des freelancers idéal sur chacune des offres
     public function matchingByFreelancer()

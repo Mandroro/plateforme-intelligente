@@ -9,14 +9,88 @@ use Illuminate\Http\Request;
 
 class FreelancerController extends Controller
 {
+
+    public function dashboard()
+    {
+        return response()->json([
+            "message" => "Statistique sur le nombre des freelancers récupéré avec succès",
+            "resultat" => Freelancer::count()
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+
+        $request->validate([
+            'poste_travail' => 'nullable',
+            'adresse_actuel' => 'nullable',
+        ]);
+
+        if (!$request->filled('poste_travail') && !$request->filled('adresse_actuel')) {
+            return response()->json([
+                'message' => 'Veuillez fournir au moins un critère de recherche.',
+                'resultat' => [],
+            ], 400);
+        }
+
+        $resultat = Freelancer::with('user')
+            ->whereNotNull('poste_travail')
+            ->whereNotNull('adresse_actuel')
+            ->when($request->filled('poste_travail'), function ($query) use ($request) {
+                $query->where('poste_travail', 'LIKE', '%' . $request->poste_travail . '%');
+            })
+            ->when($request->filled('adresse_actuel'), function ($query) use ($request) {
+                $query->where('adresse_actuel', 'LIKE', '%' . $request->adresse_actuel . '%');
+            })
+            ->get()
+            ->map(function ($candidat) {
+                return [
+                    "id" => $candidat->id,
+                    "adresse" => $candidat->adresse_actuel,
+                    "telephone" => $candidat->num_telephone,
+                    "poste" => $candidat->poste_travail,
+                    "user" => [
+                        "id" => $candidat->user->id,
+                        "email" => $candidat->user->email,
+                        "nom" => $candidat->user->name,
+                    ]
+                ];
+            });
+
+        return response()->json([
+            "message" => "Résultat de recherche récupéré avec succès",
+            "resultat" => $resultat
+        ], 200);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $candidats = Freelancer::with(['user'])->where(function ($query) {
+            $query->whereNotNull('adresse_actuel')
+                ->where('adresse_actuel', '!=', '');
+        })
+            ->where(function ($query) {
+                $query->whereNotNull('poste_travail')
+                    ->where('poste_travail', '!=', '');
+            })->get()->map(function ($candidat) {
+                return [
+                    "id" => $candidat->id,
+                    "adresse" => $candidat->adresse_actuel,
+                    "telephone" => $candidat->num_telephone,
+                    "poste" => $candidat->poste_travail,
+                    "user" => [
+                        "id" => $candidat->user->id,
+                        "email" => $candidat->user->email,
+                        "nom" => $candidat->user->name,
+                    ]
+                ];
+            });
         return response()->json([
             "message" => "Liste des freelancers recupéré avec succès",
-            "resultat" => Freelancer::with(['user'])->get()
+            "resultat" => $candidats
         ], 200);
     }
 
