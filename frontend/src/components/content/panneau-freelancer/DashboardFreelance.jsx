@@ -1,6 +1,6 @@
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,8 +8,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import axios from "axios";
+import { useApiConfig } from "../../../ApiUrlConfiguration";
 
 export default function DashboardFreelancer() {
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [nbOffre, setNbOffre] = useState(0);
+  const [nbCandidature, setNbCandidature] = useState(0);
   const columns = [
     { id: "id", label: "ID", minWidth: 10 },
     { id: "offre", label: "Offres", minWidth: 100 },
@@ -27,6 +33,51 @@ export default function DashboardFreelancer() {
     createData("4", "Développeur Fullstack NodeJs", "02-01-2025"),
     createData("5", "Développeur Symfony/VueJS", "02-01-2025"),
   ];
+
+  useEffect(() => {
+    freelancer();
+  }, []);
+
+  const freelancer = () => {
+    axios
+      .get(`${ApiURL}/utilisateur`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        dashboardCanditaure(response.data.id);
+        dashboardOffre();
+      });
+  };
+
+  const dashboardOffre = () => {
+    axios
+      .get(`${ApiURL}/nombre-offre`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setNbOffre(response.data.resultat);
+        }
+      });
+  };
+
+  const dashboardCanditaure = (id) => {
+    axios
+      .get(`${ApiURL}/nombre-candidature-envoye/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setNbCandidature(response.data.resultat);
+        }
+      });
+  };
   return (
     <div className="p-5">
       <div className="grid grid-cols-1 md:grid-cols-6 gap-2 mb-7">
@@ -34,7 +85,7 @@ export default function DashboardFreelancer() {
           <div className="flex justify-between">
             <div className="font-[Sora] text-white">
               <h1>Offres disponible</h1>
-              <p className="text-[30px]">20</p>
+              <p className="text-[30px]">{nbOffre}</p>
             </div>
             <div className="text-white p-4 bg-purple-900 rounded-full">
               <BusinessCenterIcon sx={{ width: 40, height: 40 }} />
@@ -45,7 +96,7 @@ export default function DashboardFreelancer() {
           <div className="flex justify-between">
             <div className="font-[Sora] text-white">
               <h1>Candidature envoyé</h1>
-              <p className="text-[30px]">20</p>
+              <p className="text-[30px]">{nbCandidature}</p>
             </div>
             <div className="text-white p-4 bg-green-600 rounded-full">
               <MarkEmailReadIcon sx={{ width: 40, height: 40 }} />
@@ -92,7 +143,7 @@ export default function DashboardFreelancer() {
                           align={column.align}
                           sx={{
                             fontFamily: "Sora",
-                            fontSize:"14px",
+                            fontSize: "14px",
                             color: "#fff",
                             borderColor: "#1e2939",
                           }}

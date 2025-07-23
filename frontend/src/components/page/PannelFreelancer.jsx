@@ -23,6 +23,7 @@ import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import PageDeconnexion from "./PageDeconnexion";
 import { useApiConfig } from "../../ApiUrlConfiguration";
 import axios from "axios";
+import EmailIcon from '@mui/icons-material/Email';
 
 
 const drawerWidth = 240;
@@ -125,6 +126,25 @@ function PannelFreelancer(props) {
                   <div className="flex items-center justify-left">
                     <BusinessCenterIcon className="mr-4" />
                     <Typography sx={{ fontFamily: "Sora" }}>Offres</Typography>
+                  </div>
+                </NavLink>
+              }
+            />
+          </ListItemButton>
+        </ListItem>
+                <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemText
+              primary={
+                <NavLink
+                  to="/pannel-freelancer/candidature"
+                  className={({ isActive }) =>
+                    `${getActiveClass({ isActive })}`
+                  }
+                >
+                  <div className="flex items-center justify-left">
+                    <EmailIcon className="mr-4" />
+                    <Typography sx={{ fontFamily: "Sora" }}>Candidature</Typography>
                   </div>
                 </NavLink>
               }

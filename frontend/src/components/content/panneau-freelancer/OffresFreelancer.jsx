@@ -1,198 +1,374 @@
-import { BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
-import React, { useState } from "react";
-import Logo1 from "./../../images/exemple-logo-societe/archetype-consulting.jpeg";
-import Logo2 from "./../../images/exemple-logo-societe/ciec-group.jpeg";
-import Logo3 from "./../../images/exemple-logo-societe/circuit.jpeg";
-import Logo4 from "./../../images/exemple-logo-societe/confluence.jpeg";
-import Logo5 from "./../../images/exemple-logo-societe/eci-ingenierie.jpeg";
-import Logo6 from "./../../images/exemple-logo-societe/felixe.jpeg";
-import Logo7 from "./../../images/exemple-logo-societe/holateams.jpeg";
-import Logo8 from "./../../images/exemple-logo-societe/pixoshare.jpeg";
-import Logo9 from "./../../images/exemple-logo-societe/Valsoft.jpeg";
+import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useApiConfig } from "../../../ApiUrlConfiguration";
+import { Button } from "@mui/material";
 
 export default function OffresFreelancer() {
-  const listeOffre = [
-    {
-      image: Logo1,
-      nom: "Archetype Consulting",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo2,
-      nom: "Ciec Group",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo3,
-      nom: "Circuit",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo4,
-      nom: "Confluence",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo5,
-      nom: "ECI Ingénierie",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo6,
-      nom: "Felixe",
-      poste: "Developpeur ReactJs/NextJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo7,
-      nom: "Holateams",
-      poste: "Developpeur Frontend ReactJs",
-      lieu: "Paris, France",
-    },
-    {
-      image: Logo8,
-      nom: "Pixoshare",
-      poste: "Developpeur Backend JAVA",
-      lieu: "Allemagne",
-    },
-    {
-      image: Logo9,
-      nom: "Valsoft",
-      poste: "Developpeur FullStack ReactJs/NextJs - Python",
-      lieu: "Paris, France",
-    }
-  ];
+  const { ApiURL } = useApiConfig();
+  const token = localStorage.getItem("token");
+  const [matchingAuto, setMatchingAuto] = useState([]);
+  const [idFreelance, setIdFreelancer] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const offresPerPage = 6;
-  const totalPages = Math.ceil(listeOffre.length / offresPerPage);
+  useEffect(() => {
+    utilisateur();
+  }, []);
 
-  const startIndex = (currentPage - 1) * offresPerPage;
-  const endIndex = startIndex + offresPerPage;
-  const offresToShow = listeOffre.slice(startIndex, endIndex);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const utilisateur = () => {
+    axios
+      .get(`${ApiURL}/utilisateur`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // getListeOffre(response.data.id);
+        getFreelancer(response.data.id);
+      }).catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
   };
 
+  // Obtenir la liste des offres depuis matching IA
+  const getListeOffre = (id) => {
+    axios
+      .get(`${ApiURL}/matching-offre/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setMatchingAuto(response.data.matched_offres);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
+  // Obtenir ID Freelancer
+  const getFreelancer = (id) => {
+        axios
+      .get(`${ApiURL}/freelancers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setIdFreelancer(response.data.resultat.id);
+        console.log("ID Freelance =>",response.data.resultat.id);
+      });
+  }
+
+  const matching = [
+    {
+      offre: {
+        id: 1,
+        titre_offre: "D\u00e9veloppeur Fullstack ReactJS/Laravel",
+        description:
+          "On recherche (02) d\u00e9veloppeur expriment\u00e9 et ma\u00eetrise ReactJS et PHP avec le framework Laravel",
+        created_at: "2025-06-19T15:21:07.000000Z",
+        updated_at: "2025-06-27T14:58:39.000000Z",
+        recruteur_id: 2,
+        recruteur: {
+          id: 2,
+          url_siteweb: null,
+          adresse_actuel: "Paris, France",
+          num_telephone: "0349785641",
+          secteur_travail: "Informatique",
+          logo_entreprise: null,
+          user_id: 4,
+          created_at: "2025-06-19T15:09:51.000000Z",
+          updated_at: "2025-07-15T16:45:01.000000Z",
+          user: {
+            id: 4,
+            name: "hi-tech",
+            email: "hitech@gmail.com",
+            role: "Recruteur",
+            created_at: "2025-06-19T15:09:51.000000Z",
+            updated_at: "2025-06-19T15:09:51.000000Z",
+          },
+        },
+        missions: [
+          {
+            id: 4,
+            description:
+              "Concevoir et Impl\u00e9menter de nouveau fonctionnalit\u00e9",
+            offre_id: 1,
+            created_at: "2025-06-27T16:05:27.000000Z",
+            updated_at: "2025-06-27T16:05:27.000000Z",
+          },
+          {
+            id: 8,
+            description: "Faire une int\u00e9gration de maquette",
+            offre_id: 1,
+            created_at: "2025-07-15T16:47:19.000000Z",
+            updated_at: "2025-07-15T16:47:19.000000Z",
+          },
+        ],
+        criteres: [
+          {
+            id: 1,
+            description: "Ma\u00eetrise PHP",
+            offre_id: 1,
+            created_at: "2025-06-27T17:12:03.000000Z",
+            updated_at: "2025-06-27T17:12:03.000000Z",
+          },
+          {
+            id: 2,
+            description: "Ma\u00eetrise ReactJS, Javascript",
+            offre_id: 1,
+            created_at: "2025-07-15T16:46:11.000000Z",
+            updated_at: "2025-07-15T16:46:11.000000Z",
+          },
+          {
+            id: 7,
+            description: "Connaissance de base de donn\u00e9es MySQL",
+            offre_id: 1,
+            created_at: "2025-07-18T08:45:22.000000Z",
+            updated_at: "2025-07-18T08:45:22.000000Z",
+          },
+        ],
+      },
+      score: 50.5,
+      niveau: "non compatible",
+    },
+    {
+      offre: {
+        id: 8,
+        titre_offre: "Designer 3D",
+        description: null,
+        created_at: "2025-06-27T13:09:53.000000Z",
+        updated_at: "2025-06-27T13:09:53.000000Z",
+        recruteur_id: 2,
+        recruteur: {
+          id: 2,
+          url_siteweb: null,
+          adresse_actuel: "Paris, France",
+          num_telephone: "0349785641",
+          secteur_travail: "Informatique",
+          logo_entreprise: null,
+          user_id: 4,
+          created_at: "2025-06-19T15:09:51.000000Z",
+          updated_at: "2025-07-15T16:45:01.000000Z",
+          user: {
+            id: 4,
+            name: "hi-tech",
+            email: "hitech@gmail.com",
+            role: "Recruteur",
+            created_at: "2025-06-19T15:09:51.000000Z",
+            updated_at: "2025-06-19T15:09:51.000000Z",
+          },
+        },
+        missions: [
+          {
+            id: 9,
+            description: "Cr\u00e9er un maquette 3D",
+            offre_id: 8,
+            created_at: "2025-07-18T08:38:42.000000Z",
+            updated_at: "2025-07-18T08:38:42.000000Z",
+          },
+          {
+            id: 10,
+            description: "Concevoir un architeture de maison",
+            offre_id: 8,
+            created_at: "2025-07-18T08:39:33.000000Z",
+            updated_at: "2025-07-18T08:39:33.000000Z",
+          },
+          {
+            id: 11,
+            description: "Cr\u00e9er des mod\u00e8les",
+            offre_id: 8,
+            created_at: "2025-07-18T08:43:58.000000Z",
+            updated_at: "2025-07-18T08:43:58.000000Z",
+          },
+        ],
+        criteres: [
+          {
+            id: 3,
+            description: "Ma\u00eetriser Unity 3D",
+            offre_id: 8,
+            created_at: "2025-07-18T08:40:55.000000Z",
+            updated_at: "2025-07-18T08:40:55.000000Z",
+          },
+          {
+            id: 4,
+            description: "Ma\u00eetriser AutoCAD",
+            offre_id: 8,
+            created_at: "2025-07-18T08:41:59.000000Z",
+            updated_at: "2025-07-18T08:41:59.000000Z",
+          },
+          {
+            id: 5,
+            description: "Ma\u00eetriser AutoCAD",
+            offre_id: 8,
+            created_at: "2025-07-18T08:42:18.000000Z",
+            updated_at: "2025-07-18T08:42:18.000000Z",
+          },
+          {
+            id: 6,
+            description: "Ma\u00eetriser AutoCAD",
+            offre_id: 8,
+            created_at: "2025-07-18T08:42:23.000000Z",
+            updated_at: "2025-07-18T08:42:23.000000Z",
+          },
+        ],
+      },
+      score: 38.1,
+      niveau: "non compatible",
+    },
+    {
+      offre: {
+        id: 14,
+        titre_offre: "Data Scientist",
+        description:
+          "On recherche des d\u00e9veloppeur Python passionn\u00e9 par les traitement de donn\u00e9es et l'intelligence artificielle",
+        created_at: "2025-07-18T08:56:15.000000Z",
+        updated_at: "2025-07-23T07:21:36.000000Z",
+        recruteur_id: 2,
+        recruteur: {
+          id: 2,
+          url_siteweb: null,
+          adresse_actuel: "Paris, France",
+          num_telephone: "0349785641",
+          secteur_travail: "Informatique",
+          logo_entreprise: null,
+          user_id: 4,
+          created_at: "2025-06-19T15:09:51.000000Z",
+          updated_at: "2025-07-15T16:45:01.000000Z",
+          user: {
+            id: 4,
+            name: "hi-tech",
+            email: "hitech@gmail.com",
+            role: "Recruteur",
+            created_at: "2025-06-19T15:09:51.000000Z",
+            updated_at: "2025-06-19T15:09:51.000000Z",
+          },
+        },
+        missions: [
+          {
+            id: 12,
+            description: "Mettre en place d'un module de pr\u00e9diction",
+            offre_id: 14,
+            created_at: "2025-07-23T07:20:04.000000Z",
+            updated_at: "2025-07-23T07:20:04.000000Z",
+          },
+        ],
+        criteres: [
+          {
+            id: 8,
+            description: "Ma\u00eetriser Python",
+            offre_id: 14,
+            created_at: "2025-07-23T07:20:31.000000Z",
+            updated_at: "2025-07-23T07:20:31.000000Z",
+          },
+        ],
+      },
+      score: 19.74,
+      niveau: "non compatible",
+    },
+    {
+      offre: {
+        id: 2,
+        titre_offre: "D\u00e9veloppeur Fullstack",
+        description: null,
+        created_at: "2025-06-19T15:21:18.000000Z",
+        updated_at: "2025-06-19T15:21:18.000000Z",
+        recruteur_id: 2,
+        recruteur: {
+          id: 2,
+          url_siteweb: null,
+          adresse_actuel: "Paris, France",
+          num_telephone: "0349785641",
+          secteur_travail: "Informatique",
+          logo_entreprise: null,
+          user_id: 4,
+          created_at: "2025-06-19T15:09:51.000000Z",
+          updated_at: "2025-07-15T16:45:01.000000Z",
+          user: {
+            id: 4,
+            name: "hi-tech",
+            email: "hitech@gmail.com",
+            role: "Recruteur",
+            created_at: "2025-06-19T15:09:51.000000Z",
+            updated_at: "2025-06-19T15:09:51.000000Z",
+          },
+        },
+        missions: [],
+        criteres: [],
+      },
+      score: 12.28,
+      niveau: "non compatible",
+    },
+  ];
+
+  const postulerCandidature = (idOffre) => {
+    
+    const data = {
+      freelancer_id:idFreelance,
+      offre_id:idOffre
+    };
+
+    axios.post(`${ApiURL}/postule-candidature`, data, {
+      headers:{
+        "Authorization": `Bearer ${token}`,
+        "Content-Type":"application/json"
+      }
+    }).then((response) => {
+      console.log(response.data.message);
+    }).catch((error) => {
+      console.log("Erreur inattendue:", error);
+    })
+  }
   return (
-    <div className="p-5">
-      <div className="grid grid-cols-6 mb-10 md:mb-8">
-        <div className="col-start-1 md:col-start-2 col-end-7 md:col-end-6">
-          <div className="md:flex">
-            <div className="relative flex items-center w-full mb-2 md:mb-0 mr-1">
-              <BriefcaseBusiness className="absolute left-4 text-gray-500" />
-              <input
-                className="w-full bg-white border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
-                placeholder="Je recherche"
-              />
-            </div>
-            <div className="relative flex items-center w-full mr-2 mb-2 md:mb-0">
-              <MapPin className="absolute left-4 text-gray-500" />
-              <input
-                className="w-full bg-white border border-gray-200 rounded-md p-3 pl-14 font-[Sora] focus:outline-none"
-                placeholder="Ville, Région"
-              />
-            </div>
-
-            {/* Affiche button sur mobile */}
-            <div className="md:hidden">
-              <button
-                type="button"
-                className="bg-blue-500 text-white font-[Sora] font-light w-full rounded-md p-2 cursor-pointer flex items-center justify-center"
-              >
-                Rechercher
-              </button>
-            </div>
-
-            {/* Affiche button sur ordinateur/tablette */}
-            <div className="hidden md:flex">
-              <button
-                type="button"
-                className="bg-blue-500 text-white font-[Sora] font-light rounded-md p-2 cursor-pointer"
-              >
-                <Search className="size-7" />
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="p-10">
+      <div className="font-[Sora] mb-4">
+        <h1 className="font-bold text-[25px] text-white">Offre disponible</h1>
+        <p className="text-gray-200 font-extralight text-[15px]">
+          Voici la liste des offres disponible pour votre profil
+        </p>
       </div>
       <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
-        {offresToShow.map((l, index) => (
+        {matching.map((l, index) => (
           <div
             key={index}
-            className="bg-gray-800 hover:bg-gray-950 col-span-3 flex p-5 rounded-md cursor-pointer"
+            className="bg-gray-800 col-span-6 flex items-center justify-between p-5 rounded-md "
           >
-            <img
-              src={l.image}
-              className="hidden md:flex rounded-md w-1/4 mr-6"
-            />
-            <div className="leading-8">
-              <h1 className="text-white font-[Sora] font-bold text-[19px]">
-                {l.nom}
-              </h1>
-              <p className="text-gray-500 font-[Sora] font-light text-[15px]">
-                {l.poste}
-              </p>
-              <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                <CalendarDays className="mr-2" />5 Mai 2025
-              </p>
-              <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
-                <MapPin className="mr-2" />
-                {l.lieu}
-              </p>
+            <div className="flex items-center">
+              <div className="bg-green-200 w-30 h-30 text-center rounded-md mr-5">
+                <h1 className="text-green-600 text-[80px]">
+                  {l.offre.titre_offre.charAt(0)}
+                </h1>
+              </div>
+              <div className="leading-8">
+                <h1 className="text-white font-[Sora] font-bold text-[20px]">
+                  {l.offre.titre_offre}
+                </h1>
+                <p className="text-gray-500 font-[Sora] font-light text-[15px] uppercase">
+                  {l.offre.recruteur.user.name}
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
+                  <CalendarDays className="mr-2" />{l.created_at}
+                </p>
+                <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
+                  <MapPin className="mr-2" />
+                  {l.offre.recruteur.adresse_actuel}
+                </p>
+              </div>
             </div>
+            <Button
+              onClick={() => postulerCandidature(l.offre.id)}
+              variant="contained"
+              sx={{
+                fontFamily: "Sora",
+                borderRadius: 50,
+                textTransform: "inherit",
+              }}
+            >
+              Postuler
+            </Button>
           </div>
         ))}
       </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-8">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
-              currentPage === 1
-                ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-                : "bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
-            }`}
-          >
-            <ChevronLeft/>
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-            (pageNumber) => (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
-                  currentPage === pageNumber
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-800 text-white hover:bg-gray-700 cursor-pointer"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            )
-          )}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 mx-1 rounded-md font-[Sora] ${
-              currentPage === totalPages
-                ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-                : "bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
-            }`}
-          >
-            <ChevronRight/>
-          </button>
-        </div>
-      )}
     </div>
   );
 }
