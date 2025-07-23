@@ -22,7 +22,7 @@ export default function InformationProfil({
   const [telephone, setTelephone] = useState("");
 
   useEffect(() => {
-    if (open) {
+    if (open && id) {
       axios
         .get(`${ApiURL}/recruteurs/${id}`, {
           headers: {
@@ -40,7 +40,7 @@ export default function InformationProfil({
           console.log("Erreur inattendue:", error);
         });
     }
-  }, [open]);
+  }, [open, id]);
 
   const mettreAjour = (e) => {
     e.preventDefault();
@@ -49,7 +49,7 @@ export default function InformationProfil({
       secteur_travail: secteurTravail,
       url_siteweb: urlSite,
       adresse_actuel: adresse,
-      numero_telephone: telephone
+      num_telephone: telephone
     }
 
     axios.put(`${ApiURL}/recruteurs/${idRecruteur}`, data, {

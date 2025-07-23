@@ -27,7 +27,7 @@ export default function ModifierOffre({
           },
         })
         .then((response) => {
-          setTitre(response.data.resultat.titre_offre);
+          setTitre(response.data.resultat.titre);
           setDescription(response.data.resultat.description);
         })
         .catch((error) => {
