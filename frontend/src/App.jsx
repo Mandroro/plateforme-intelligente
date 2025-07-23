@@ -27,6 +27,7 @@ import ProtectedRouter from "./ProtectedRouter";
 import DetailOffre from "./components/content/site-vitrine/content/DetailOffre";
 import DetailEntreprise from "./components/content/site-vitrine/content/DetailEntreprise";
 import DetailCandidat from "./components/content/site-vitrine/content/DetailCandidat";
+import CandidatureFreelancer from "./components/content/panneau-freelancer/CandidatureFreelancer";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
           <Route path="dashboard" element={<DashboardFreelancer />} />
           <Route path="offres" element={<OffresFreelancer />} />
           <Route path="compte" element={<CompteFreelancer/>} />
+          <Route path="candidature" element={<CandidatureFreelancer/>} />
         </Route>
 
         <Route path="/pannel-recruteur" element={<ProtectedRouter><PannelRecruteur /></ProtectedRouter>}>

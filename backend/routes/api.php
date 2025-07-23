@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CandidatureController;
 use App\Http\Controllers\API\CompetenceController;
 use App\Http\Controllers\API\FormationController;
 use App\Http\Controllers\API\FreelancerController;
@@ -41,6 +42,7 @@ Route::get('/stat-recruteur', [RecruteurController::class, 'dashboard']);
 
 // Liste des offres disponible 
 Route::get('/liste-des-offres', [OffreController::class, 'index']);
+Route::get('/recherche-offre', [OffreController::class, 'search']);
 
 // Details sur un offre
 Route::get('/liste-des-offres/{id}', [OffreController::class, 'show']);
@@ -50,10 +52,12 @@ Route::get('/liste-des-criteres/{id}', [CritereController::class, 'show']);
 // Liste des freelancers inscrit
 Route::get('/liste-des-candidats', [FreelancerController::class, 'index']);
 Route::get('/liste-des-candidats/{id}', [FreelancerController::class, 'show']);
+Route::get('/recherche-candidat', [FreelancerController::class, 'search']);
 
 // Liste des recruteurs inscrit
 Route::get('/liste-des-entreprises', [RecruteurController::class, 'index']);
 Route::get('/liste-des-entreprises/{id}', [RecruteurController::class, 'detail']);
+Route::get('/recherche-entreprise', [RecruteurController::class, 'search']);
 
 
 // Route API accessible après authentification
@@ -72,7 +76,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/recruteurs/{id}', [RecruteurController::class, 'update']);
 
     // Offre
-    Route::get('/offres', [OffreController::class, 'index']);
+    Route::get('/nombre-offre', [OffreController::class, 'dashboard']);
+    Route::get('/nombre-offre-publie/{id}', [OffreController::class, 'dashboardById']);
+    Route::get('/liste-offres/{id}', [OffreController::class, 'listeOffreById']);
     Route::get('/offres/{id}', [OffreController::class, 'show']);
     Route::post('/offres/create', [OffreController::class, 'store']);
     Route::put('/offres/{id}', [OffreController::class, 'update']);
@@ -103,6 +109,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Matching automatique depuis un API externe IA
     Route::get('/matching-offre/{id}', [MatchingController::class, 'matchingByOffre']);
     Route::get('/matching-freelancer', [MatchingController::class, 'matchingByFreelancer']);
+
+    // Candidature
+    Route::get('/nombre-candidature-envoye/{id}', [CandidatureController::class, 'dashboardByFreelancer']);
+    Route::get('/nombre-candidature-recu/{id}', [CandidatureController::class, 'dashboardByRecruteur']);
+    Route::get('/liste-candidature-envoye/{id}', [CandidatureController::class, 'listeCandidaturesByFreelancer']);
+    Route::get('/liste-candidature-recu/{id}', [CandidatureController::class, 'listeCandidaturesByRecruteur']);
+    Route::post('/postule-candidature', [CandidatureController::class, 'send']);
+
 
     // Déconnexion
     Route::delete('/deconnexion', [AuthController::class, 'deconnexion']);
