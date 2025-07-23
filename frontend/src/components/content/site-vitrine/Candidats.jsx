@@ -107,15 +107,11 @@ export default function Candidats() {
               onClick={() => voirDetail(l.id)}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
             >
-              {/* <img
-                src={l.image}
-                className="hidden md:flex rounded-md w-1/4 mr-6"
-              /> */}
-              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
-                <User className="mr-2 size-20 text-gray-50" />
+              <div className="w-30 h-30 text-center bg-green-200 rounded-md mr-6">
+                <h1 className="font-[Sora] text-[80px] text-green-600">{l.nom.charAt(0)}</h1>
               </div>
               <div className="leading-8">
-                <h1 className="text-white font-[Sora] font-bold text-[19px] mb-1">
+                <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
                   {l.nom}
                 </h1>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">

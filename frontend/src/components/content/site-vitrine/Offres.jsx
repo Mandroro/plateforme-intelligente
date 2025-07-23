@@ -66,7 +66,7 @@ export default function Offres() {
 
   return (
     <div className="bg-gray-900 py-25">
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto">
         <div className="grid grid-cols-6 mb-10 md:mb-20">
           <div className="col-start-1 md:col-start-2 col-end-7 md:col-end-6">
             <div className="md:flex">
@@ -107,27 +107,25 @@ export default function Offres() {
             </div>
           </div>
         </div>
-        <div className="grid grid-col-1 md:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-col-1 md:grid-cols-8 gap-4 mb-8">
           {offresToShow.map((l) => (
             <div
               key={l.id}
               onClick={() => voirDetail(l.id)}
-              className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
+              className="bg-gray-950 hover:bg-gray-800 col-span-4 flex p-5 rounded-md cursor-pointer"
             >
-              {/* <img
-                src={l.image}
-                className="hidden md:flex rounded-md w-1/4 mr-6"
-              /> */}
-              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
-                <House className="mr-2 size-20 text-gray-50" />
+              <div className="w-30 h-30 text-center bg-green-200 rounded-md mr-5">
+                <h1 className="text-green-600 font-[Sora] text-[80px] uppercase">
+                  {l.poste.charAt(0)}
+                </h1>
               </div>
               <div className="leading-8">
                 <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
+                  {l.poste}
+                </h1>
+                <h1 className="text-gray-500 font-[Sora] font-light text-[15px] capitalize">
                   {l.nom}
                 </h1>
-                <p className="text-gray-500 font-[Sora] font-light text-[15px]">
-                  Offre : {l.poste}
-                </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   <CalendarDays className="mr-2" />
                   Publié le : {l.date}

@@ -114,12 +114,8 @@ export default function Entreprises() {
               onClick={() => voirDetail(l.id)}
               className="bg-gray-950 hover:bg-gray-800 col-span-3 flex p-5 rounded-md cursor-pointer"
             >
-              {/* <img
-                src={l.image}
-                className="hidden md:flex rounded-md w-1/4 mr-6"
-              /> */}
-              <div className="w-1/3 bg-gray-800 rounded-md mr-6 flex items-center justify-center">
-                <House className="mr-2 size-20 text-gray-50" />
+              <div className="w-30 h-30 text-center bg-green-200 rounded-md mr-6">
+                <h1 className="font-[Sora] text-green-600 text-[80px] uppercase">{l.nom.charAt(0)}</h1>
               </div>
               <div className="leading-8">
                 <h1 className="text-white font-[Sora] font-bold text-[19px] uppercase">
