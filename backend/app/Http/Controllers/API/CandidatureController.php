@@ -27,12 +27,12 @@ class CandidatureController extends Controller
         ]);
     }
 
-    // Listes des (03)trois dernier candidatures d'un freelancer
+    // Listes des (04) quatres derniers candidatures d'un freelancer
     public function historiqueCandidaturesByFreelancer(string $id)
     {
         $candidatures = Candidature::with(['offre.recruteur.user'])
             ->where('freelancer_id', $id)
-            ->limit(3)
+            ->limit(4)
             ->get()
             ->map(function ($candidature) {
                 return [
@@ -97,6 +97,30 @@ class CandidatureController extends Controller
         ], 200);
     }
 
+    // Listes des (04) quatres derniers candidatures réçu par d'un recruteur
+    public function historiqueCandidaturesByRecruteur(string $recruteurId)
+    {
+        $candidatures = Candidature::with(['freelancer.user', 'offre'])
+            ->whereHas('offre', function ($query) use ($recruteurId) {
+                $query->where('recruteur_id', $recruteurId);
+            })->limit(4)
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'candidature_id' => $c->id,
+                    'freelancer_id' => $c->freelancer->id,
+                    'freelancer_nom' => $c->freelancer->user->name,
+                    'offre_id' => $c->offre->id,
+                    'offre_titre' => $c->offre->titre_offre,
+                    'date_candidature' => $c->created_at->locale('fr')->isoFormat('DD MMMM YYYY'),
+                ];
+            });
+
+        return response()->json([
+            'message' => 'Liste des candidatures aux offres du recruteur récupérée avec succès',
+            'resultat' => $candidatures
+        ], 200);
+    }
 
     // Envoyer la candidature
     public function send(Request $request)
@@ -112,5 +136,14 @@ class CandidatureController extends Controller
             "message" => "Candidature envoyé avec succès",
             "resultat" => $candidature
         ], 201);
+    }
+
+    // Retirer la candidature
+    public function retirerCandidature(string $id){
+        $candidature = Candidature::findOrFail($id);
+        $candidature->delete();
+        return response()->json([
+            "message" => "Candidature retiré avec succès"
+        ], 200);
     }
 }
