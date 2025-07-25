@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Http;
 class MatchingController extends Controller
 {
     // Matching automatique pour afficher la liste des quatre(04) offres idéal à un profil spécifique
-
     public function matchingByOffre(string $id)
     {
         // Récupérer les données du freelancer
@@ -70,7 +69,9 @@ class MatchingController extends Controller
                 'niveau' => $niveau,
                 'created_at' => $formattedDate,
             ];
-        })->sortByDesc('score')->take(4)->values();
+        })
+        ->filter(fn($f) => $f['score'] >= 75)
+        ->sortByDesc('score')->take(4)->values();
 
         // Retourner les résultats
         return response()->json([
@@ -84,16 +85,23 @@ class MatchingController extends Controller
     }
 
 
-    // Matching automatique pour afficher la liste quatre(04) des freelancers idéal sur chacune des offres
-    public function matchingByFreelancer()
+    // Matching automatique pour afficher la liste quatre(04) des freelancers idéal à l'offre
+    public function matchingByFreelancer(string $offreId)
     {
-        // Récupérer toutes les offres avec missions et critères
-        $offres = Offre::with(['missions', 'criteres'])->get();
+        // Charger l'offre ciblée
+        $offre = Offre::with(['missions', 'criteres'])->find($offreId);
 
-        // Récupérer tous les freelancers avec leurs formations et compétences
-        $freelancers = Freelancer::with(['formations', 'competences'])->get();
+        if (!$offre) {
+            return response()->json(['error' => 'Offre introuvable'], 404);
+        }
 
-        // Préparer les profils textuels des freelancers
+        // Charger tous les freelancers formations, compétences
+        $freelancers = Freelancer::with(['user', 'formations', 'competences'])
+            ->whereNotNull('poste_travail')
+            ->whereNotNull('adresse_actuel')
+            ->get();
+
+        // Construire les profils textuels
         $freelancerProfiles = $freelancers->map(function ($freelancer) {
             return implode(', ', array_merge(
                 $freelancer->formations->pluck('titre_formation')->toArray(),
@@ -101,65 +109,61 @@ class MatchingController extends Controller
             ));
         })->toArray();
 
-        $results = [];
+        // Texte de l'offre
+        $offreText = implode(', ', array_merge(
+            $offre->missions->pluck('description')->toArray(),
+            $offre->criteres->pluck('description')->toArray()
+        ));
 
-        // Pour chaque offre, comparer avec tous les freelancers
-        foreach ($offres as $offre) {
-            // Préparer le texte de l'offre (missions + critères)
-            $offreText = implode(', ', array_merge(
-                $offre->missions->pluck('description')->toArray(),
-                $offre->criteres->pluck('description')->toArray()
-            ));
+        // Appel HF
+        $response = Http::withToken(env('HUGGINGFACE_TOKEN'))
+            ->post('https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2', [
+                'inputs' => [
+                    'source_sentence' => $offreText,
+                    'sentences' => $freelancerProfiles
+                ]
+            ]);
 
-            // Requête Hugging Face
-            $response = Http::withToken(env('HUGGINGFACE_TOKEN'))
-                ->post('https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2', [
-                    'inputs' => [
-                        'source_sentence' => $offreText,
-                        'sentences' => $freelancerProfiles
-                    ]
-                ]);
-
-            if ($response->failed()) {
-                return response()->json([
-                    'error' => 'Erreur Hugging Face',
-                    'message' => $response->body()
-                ], 500);
-            }
-
-            $scores = $response->json();
-
-            // Associer les scores aux freelancers avec un "niveau"
-            $matchedFreelancers = $freelancers->values()->map(function ($freelancer, $index) use ($scores) {
-                $score = round($scores[$index] * 100, 2);
-
-                $niveau = match (true) {
-                    $score >= 90 => 'idéal',
-                    $score >= 75 => 'très compatible',
-                    $score >= 60 => 'compatible moyen',
-                    default      => 'non compatible',
-                };
-
-                return [
-                    'freelancer' => [
-                        'id' => $freelancer->id,
-                        'nom' => $freelancer->nom,
-                    ],
-                    'score' => $score,
-                    'niveau' => $niveau
-                ];
-            })->sortByDesc('score')->take(4)->values();
-
-            $results[] = [
-                'offre' => [
-                    'id' => $offre->id,
-                    'titre' => $offre->titre,
-                ],
-                'matched_freelancers' => $matchedFreelancers
-            ];
+        if ($response->failed()) {
+            return response()->json([
+                'error' => 'Erreur Hugging Face',
+                'message' => $response->body()
+            ], 500);
         }
 
-        // Retourner les résultats
-        return response()->json($results);
+        $scores = $response->json();
+
+        // Mapping + niveaux
+        $matchedFreelancers = $freelancers->values()->map(function ($freelancer, $index) use ($scores) {
+            $score = round($scores[$index] * 100, 2);
+
+            $niveau = match (true) {
+                $score >= 90 => 'idéal',
+                $score >= 75 => 'très compatible',
+                $score >= 60 => 'compatible moyen',
+                default      => 'non compatible',
+            };
+
+            return [
+                'freelancer' => [
+                    'id'         => $freelancer->id,
+                    'nom'        => $freelancer->user->name,
+                    'specialite' => $freelancer->poste_travail,
+                    'adresse'    => $freelancer->adresse_actuel,
+                ],
+                'score'  => $score,
+                'niveau' => $niveau
+            ];
+        })
+        ->filter(fn($f) => $f['score'] >= 75)
+        ->sortByDesc('score')->take(4)->values();
+
+        return response()->json([
+            'offre' => [
+                'id'    => $offre->id,
+                'titre' => $offre->titre,
+            ],
+            'matched_freelancers' => $matchedFreelancers
+        ]);
     }
 }
