@@ -23,7 +23,6 @@ export default function PageDeconnexion({ open, setOpen, handleClose }) {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log("Message: ", response.data.message);
           setOpen(false);
           localStorage.removeItem("token");
           redirection("/authentification");
