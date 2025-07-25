@@ -32,11 +32,12 @@ import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
 import ModifierOffre from "./modal/ModifierOffre";
 import SpecifierOffre from "./modal/SpecifierOffre";
+import { useNavigate } from "react-router";
 
 export default function GestionOffres() {
   const { ApiURL } = useApiConfig();
   const token = localStorage.getItem("token");
-  const [id, setId] = useState("");
+  const redirection = useNavigate();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -104,6 +105,12 @@ export default function GestionOffres() {
   const fermerModifierOffre = () => {
     setOpenModifierOffre(false);
   };
+
+  // Voir les candidats idéal à l'offre
+  const voirCandidat = (id) => {
+    localStorage.setItem("OFFRE_ID", id);
+    redirection('/pannel-recruteur/offres/candidats');
+  }
 
   return (
     <div className="p-6 md:p-10">
@@ -260,7 +267,7 @@ export default function GestionOffres() {
                       />
                     </ListItem>
                   </div>
-                  <Button variant="contained" sx={{fontFamily:"Sora", fontWeight:300, borderRadius:50, textTransform:"inherit"}}>Voir les candidats idéals</Button>
+                  <Button onClick={()=> voirCandidat(d.id)} variant="contained" sx={{fontFamily:"Sora", fontWeight:300, borderRadius:50, textTransform:"inherit"}}>Voir les candidats idéals</Button>
                 </div>
               </div>
             ))

@@ -71,14 +71,7 @@ function PannelRecruteur(props) {
   };
 
   const location = useLocation();
-  const menuActive = location.pathname
-    .split("/")
-    .filter((segment) => segment !== "")[
-    location.pathname
-      .split("/")
-      .filter((segment) => segment !== "")
-      .indexOf("pannel-recruteur") + 1
-  ];
+  const menuActive = location.pathname.split("/pannel-recruteur/");
 
   const getActiveClass = ({ isActive }) =>
     isActive ? "text-green-600" : "text-white hover:text--500";

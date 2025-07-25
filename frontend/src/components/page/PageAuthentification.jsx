@@ -80,13 +80,6 @@ export default function PageAuthentification() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <NavLink
-                className={
-                  "text-white font-[Sora] text-[13px] hover:text-blue-600"
-                }
-              >
-                Mot de passe oublié ?
-              </NavLink>
             </div>
             <button
               onClick={seConnecter}
