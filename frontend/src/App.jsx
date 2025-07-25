@@ -28,6 +28,7 @@ import DetailOffre from "./components/content/site-vitrine/content/DetailOffre";
 import DetailEntreprise from "./components/content/site-vitrine/content/DetailEntreprise";
 import DetailCandidat from "./components/content/site-vitrine/content/DetailCandidat";
 import CandidatureFreelancer from "./components/content/panneau-freelancer/CandidatureFreelancer";
+import CandidatIdeal from "./components/content/panneau-recruteur/CandidatIdeal";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardRecruteur/>} />
           <Route path="offres" element={<GestionOffres/>} />
+          <Route path="offres/candidats" element={<CandidatIdeal/>} />
           <Route path="candidature" element={<ListeCandidatures/>} />
           <Route path="compte" element={<CompteRecruteur/>} />
         </Route>
