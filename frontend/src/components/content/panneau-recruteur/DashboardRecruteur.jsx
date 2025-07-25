@@ -16,6 +16,7 @@ export default function DashboardRecruteur() {
   const token = localStorage.getItem("token");
   const [nbOffre, setNbOffre] = useState(0);
   const [nbCandidature, setNbCandidature] = useState(0);
+  const [historique, setHistorique] = useState([]);
 
   useEffect(() => {
     utilisateur();
@@ -47,7 +48,8 @@ export default function DashboardRecruteur() {
       })
       .then((response) => {
         dashboardOffre(response.data.resultat.recruteur.id);
-        dashboardCanditaure(response.data.resultat.recruteur.id)
+        dashboardCanditaure(response.data.resultat.recruteur.id);
+        historiqueCandidature(response.data.resultat.recruteur.id);
       })
       .catch((error) => {
         console.log("Erreur inattendue:", error);
@@ -82,23 +84,34 @@ export default function DashboardRecruteur() {
       });
   };
 
+  const historiqueCandidature = (id) => {
+    axios
+      .get(`${ApiURL}/historique-candidature-recu/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setHistorique(response.data.resultat);
+          console.log(response.data.resultat);
+        }
+      });
+  };
+
   const columns = [
-    { id: "id", label: "ID", minWidth: 10 },
-    { id: "offre", label: "Offres", minWidth: 100 },
     { id: "date", label: "Date", minWidth: 20 },
+    { id: "offre", label: "Offre", minWidth: 100 },
+    { id: "candidat", label: "Candidat", minWidth: 100 },
   ];
 
-  function createData(id, offre, date) {
-    return { id, offre, date };
+  function createData(date, offre, candidat) {
+    return { date, offre, candidat};
   }
 
-  const rows = [
-    createData("1", "Développeur Fullstack JavaScript", "02-01-2025"),
-    createData("2", "Développeur Fullstack Java", "02-01-2025"),
-    createData("3", "Développeur Fullstack Php/ReactJS", "02-01-2025"),
-    createData("4", "Développeur Fullstack NodeJs", "02-01-2025"),
-    createData("5", "Développeur Symfony/VueJS", "02-01-2025"),
-  ];
+  const rows = historique.map((d) =>
+    createData(d.date_candidature, d.offre_titre, d.freelancer_nom)
+  );
 
   return (
     <div className="p-5">

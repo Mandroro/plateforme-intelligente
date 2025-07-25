@@ -16,23 +16,7 @@ export default function DashboardFreelancer() {
   const token = localStorage.getItem("token");
   const [nbOffre, setNbOffre] = useState(0);
   const [nbCandidature, setNbCandidature] = useState(0);
-  const columns = [
-    { id: "id", label: "ID", minWidth: 10 },
-    { id: "offre", label: "Offres", minWidth: 100 },
-    { id: "date", label: "Date", minWidth: 20 },
-  ];
-
-  function createData(id, offre, date) {
-    return { id, offre, date };
-  }
-
-  const rows = [
-    createData("1", "Développeur Fullstack JavaScript", "02-01-2025"),
-    createData("2", "Développeur Fullstack Java", "02-01-2025"),
-    createData("3", "Développeur Fullstack Php/ReactJS", "02-01-2025"),
-    createData("4", "Développeur Fullstack NodeJs", "02-01-2025"),
-    createData("5", "Développeur Symfony/VueJS", "02-01-2025"),
-  ];
+  const [historique, setHistorique] = useState([]);
 
   useEffect(() => {
     freelancer();
@@ -48,6 +32,7 @@ export default function DashboardFreelancer() {
       .then((response) => {
         dashboardCanditaure(response.data.id);
         dashboardOffre();
+        historiqueCandidature(response.data.id);
       });
   };
 
@@ -78,6 +63,35 @@ export default function DashboardFreelancer() {
         }
       });
   };
+
+  const historiqueCandidature = (id) => {
+    axios
+      .get(`${ApiURL}/historique-candidature-envoye/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setHistorique(response.data.resultat);
+        }
+      });
+  };
+
+  const columns = [
+    { id: "date", label: "Date", minWidth: 20 },
+    { id: "offre", label: "Offres", minWidth: 100 },
+    { id: "recruteur", label: "Recruteur", minWidth: 100 },
+  ];
+
+  function createData(offre, recruteur, date) {
+    return { offre, recruteur, date };
+  }
+
+  const rows = historique.map((d) =>
+    createData(d.titre_offre, d.recruteur_nom, d.date_candidature)
+  );
+
   return (
     <div className="p-5">
       <div className="grid grid-cols-1 md:grid-cols-6 gap-2 mb-7">

@@ -24,7 +24,8 @@ export default function OffresFreelancer() {
       .then((response) => {
         // getListeOffre(response.data.id);
         getFreelancer(response.data.id);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log("Erreur inattendue:", error);
       });
   };
@@ -47,7 +48,7 @@ export default function OffresFreelancer() {
 
   // Obtenir ID Freelancer
   const getFreelancer = (id) => {
-        axios
+    axios
       .get(`${ApiURL}/freelancers/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -55,9 +56,9 @@ export default function OffresFreelancer() {
       })
       .then((response) => {
         setIdFreelancer(response.data.resultat.id);
-        console.log("ID Freelance =>",response.data.resultat.id);
+        console.log("ID Freelance =>", response.data.resultat.id);
       });
-  }
+  };
 
   const matching = [
     {
@@ -131,6 +132,7 @@ export default function OffresFreelancer() {
       },
       score: 50.5,
       niveau: "non compatible",
+      created_at: "19 juin 2025",
     },
     {
       offre: {
@@ -215,6 +217,7 @@ export default function OffresFreelancer() {
       },
       score: 38.1,
       niveau: "non compatible",
+      created_at: "19 juin 2025",
     },
     {
       offre: {
@@ -265,6 +268,7 @@ export default function OffresFreelancer() {
       },
       score: 19.74,
       niveau: "non compatible",
+      created_at: "19 juin 2025",
     },
     {
       offre: {
@@ -298,27 +302,30 @@ export default function OffresFreelancer() {
       },
       score: 12.28,
       niveau: "non compatible",
+      created_at: "19 juin 2025",
     },
   ];
 
   const postulerCandidature = (idOffre) => {
-    
     const data = {
-      freelancer_id:idFreelance,
-      offre_id:idOffre
+      freelancer_id: idFreelance,
+      offre_id: idOffre,
     };
 
-    axios.post(`${ApiURL}/postule-candidature`, data, {
-      headers:{
-        "Authorization": `Bearer ${token}`,
-        "Content-Type":"application/json"
-      }
-    }).then((response) => {
-      console.log(response.data.message);
-    }).catch((error) => {
-      console.log("Erreur inattendue:", error);
-    })
-  }
+    axios
+      .post(`${ApiURL}/postule-candidature`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
   return (
     <div className="p-10">
       <div className="font-[Sora] mb-4">
@@ -347,7 +354,8 @@ export default function OffresFreelancer() {
                   {l.offre.recruteur.user.name}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
-                  <CalendarDays className="mr-2" />{l.created_at}
+                  <CalendarDays className="mr-2" />
+                  {l.created_at}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />

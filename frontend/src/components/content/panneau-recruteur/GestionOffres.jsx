@@ -260,7 +260,7 @@ export default function GestionOffres() {
                       />
                     </ListItem>
                   </div>
-                  {/* <Button variant="contained" sx={{fontFamily:"Sora", fontWeight:300, borderRadius:50, textTransform:"inherit"}}>Plus de détails</Button> */}
+                  <Button variant="contained" sx={{fontFamily:"Sora", fontWeight:300, borderRadius:50, textTransform:"inherit"}}>Voir les candidats idéals</Button>
                 </div>
               </div>
             ))
