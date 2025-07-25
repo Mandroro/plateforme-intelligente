@@ -116,6 +116,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/liste-candidature-envoye/{id}', [CandidatureController::class, 'listeCandidaturesByFreelancer']);
     Route::get('/liste-candidature-recu/{id}', [CandidatureController::class, 'listeCandidaturesByRecruteur']);
     Route::post('/postule-candidature', [CandidatureController::class, 'send']);
+    Route::get('/historique-candidature-envoye/{id}', [CandidatureController::class, 'historiqueCandidaturesByFreelancer']);
+    Route::get('/historique-candidature-recu/{id}', [CandidatureController::class, 'historiqueCandidaturesByRecruteur']);
 
 
     // Déconnexion
