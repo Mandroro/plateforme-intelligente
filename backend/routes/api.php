@@ -108,7 +108,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Matching automatique depuis un API externe IA
     Route::get('/matching-offre/{id}', [MatchingController::class, 'matchingByOffre']);
-    Route::get('/matching-freelancer', [MatchingController::class, 'matchingByFreelancer']);
+    Route::get('/matching-freelancer/{id}', [MatchingController::class, 'matchingByFreelancer']);
 
     // Candidature
     Route::get('/nombre-candidature-envoye/{id}', [CandidatureController::class, 'dashboardByFreelancer']);
