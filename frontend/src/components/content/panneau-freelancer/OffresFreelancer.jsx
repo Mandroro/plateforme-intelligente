@@ -2,13 +2,21 @@ import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import DetailsOffre from "./modal/DetailsOffre";
 
 export default function OffresFreelancer() {
   const { ApiURL } = useApiConfig();
   const token = localStorage.getItem("token");
   const [matchingAuto, setMatchingAuto] = useState([]);
   const [idFreelance, setIdFreelancer] = useState("");
+  const [data, setData] = useState([]);
+  const [dataUser, setDataUser] = useState([]);
+  const [dataRecruteur, setDataRecruteur] = useState([]);
+  const [dataMission, setDataMission] = useState([]);
+  const [dataCritere, setDataCritere] = useState([]);
+  const [openDetail, setOpenDetail] = useState(false);
 
   useEffect(() => {
     utilisateur();
@@ -136,142 +144,6 @@ export default function OffresFreelancer() {
     },
     {
       offre: {
-        id: 8,
-        titre_offre: "Designer 3D",
-        description: null,
-        created_at: "2025-06-27T13:09:53.000000Z",
-        updated_at: "2025-06-27T13:09:53.000000Z",
-        recruteur_id: 2,
-        recruteur: {
-          id: 2,
-          url_siteweb: null,
-          adresse_actuel: "Paris, France",
-          num_telephone: "0349785641",
-          secteur_travail: "Informatique",
-          logo_entreprise: null,
-          user_id: 4,
-          created_at: "2025-06-19T15:09:51.000000Z",
-          updated_at: "2025-07-15T16:45:01.000000Z",
-          user: {
-            id: 4,
-            name: "hi-tech",
-            email: "hitech@gmail.com",
-            role: "Recruteur",
-            created_at: "2025-06-19T15:09:51.000000Z",
-            updated_at: "2025-06-19T15:09:51.000000Z",
-          },
-        },
-        missions: [
-          {
-            id: 9,
-            description: "Cr\u00e9er un maquette 3D",
-            offre_id: 8,
-            created_at: "2025-07-18T08:38:42.000000Z",
-            updated_at: "2025-07-18T08:38:42.000000Z",
-          },
-          {
-            id: 10,
-            description: "Concevoir un architeture de maison",
-            offre_id: 8,
-            created_at: "2025-07-18T08:39:33.000000Z",
-            updated_at: "2025-07-18T08:39:33.000000Z",
-          },
-          {
-            id: 11,
-            description: "Cr\u00e9er des mod\u00e8les",
-            offre_id: 8,
-            created_at: "2025-07-18T08:43:58.000000Z",
-            updated_at: "2025-07-18T08:43:58.000000Z",
-          },
-        ],
-        criteres: [
-          {
-            id: 3,
-            description: "Ma\u00eetriser Unity 3D",
-            offre_id: 8,
-            created_at: "2025-07-18T08:40:55.000000Z",
-            updated_at: "2025-07-18T08:40:55.000000Z",
-          },
-          {
-            id: 4,
-            description: "Ma\u00eetriser AutoCAD",
-            offre_id: 8,
-            created_at: "2025-07-18T08:41:59.000000Z",
-            updated_at: "2025-07-18T08:41:59.000000Z",
-          },
-          {
-            id: 5,
-            description: "Ma\u00eetriser AutoCAD",
-            offre_id: 8,
-            created_at: "2025-07-18T08:42:18.000000Z",
-            updated_at: "2025-07-18T08:42:18.000000Z",
-          },
-          {
-            id: 6,
-            description: "Ma\u00eetriser AutoCAD",
-            offre_id: 8,
-            created_at: "2025-07-18T08:42:23.000000Z",
-            updated_at: "2025-07-18T08:42:23.000000Z",
-          },
-        ],
-      },
-      score: 38.1,
-      niveau: "non compatible",
-      created_at: "19 juin 2025",
-    },
-    {
-      offre: {
-        id: 14,
-        titre_offre: "Data Scientist",
-        description:
-          "On recherche des d\u00e9veloppeur Python passionn\u00e9 par les traitement de donn\u00e9es et l'intelligence artificielle",
-        created_at: "2025-07-18T08:56:15.000000Z",
-        updated_at: "2025-07-23T07:21:36.000000Z",
-        recruteur_id: 2,
-        recruteur: {
-          id: 2,
-          url_siteweb: null,
-          adresse_actuel: "Paris, France",
-          num_telephone: "0349785641",
-          secteur_travail: "Informatique",
-          logo_entreprise: null,
-          user_id: 4,
-          created_at: "2025-06-19T15:09:51.000000Z",
-          updated_at: "2025-07-15T16:45:01.000000Z",
-          user: {
-            id: 4,
-            name: "hi-tech",
-            email: "hitech@gmail.com",
-            role: "Recruteur",
-            created_at: "2025-06-19T15:09:51.000000Z",
-            updated_at: "2025-06-19T15:09:51.000000Z",
-          },
-        },
-        missions: [
-          {
-            id: 12,
-            description: "Mettre en place d'un module de pr\u00e9diction",
-            offre_id: 14,
-            created_at: "2025-07-23T07:20:04.000000Z",
-            updated_at: "2025-07-23T07:20:04.000000Z",
-          },
-        ],
-        criteres: [
-          {
-            id: 8,
-            description: "Ma\u00eetriser Python",
-            offre_id: 14,
-            created_at: "2025-07-23T07:20:31.000000Z",
-            updated_at: "2025-07-23T07:20:31.000000Z",
-          },
-        ],
-      },
-      score: 19.74,
-      niveau: "non compatible",
-      created_at: "19 juin 2025",
-    },
-    {
-      offre: {
         id: 2,
         titre_offre: "D\u00e9veloppeur Fullstack",
         description: null,
@@ -306,6 +178,7 @@ export default function OffresFreelancer() {
     },
   ];
 
+  // Postuler sur une offre
   const postulerCandidature = (idOffre) => {
     const data = {
       freelancer_id: idFreelance,
@@ -326,6 +199,67 @@ export default function OffresFreelancer() {
         console.log("Erreur inattendue:", error);
       });
   };
+
+  // Voir le détails sur l'offre
+  const handleClikDetail = (id) => {
+    axios
+      .get(`${ApiURL}/offres/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200 && response.data.resultat !== null) {
+          listeMissions(response.data.resultat.id);
+          listeCriteres(response.data.resultat.id);
+          setData(response.data.resultat);
+          setDataRecruteur(response.data.resultat.recruteur);
+          setDataUser(response.data.resultat.recruteur.user);
+          setOpenDetail(true);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
+  };
+
+  // Liste mission de l'offre
+  const listeMissions = (id) => {
+    axios
+      .get(`${ApiURL}/missions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Liste missions:", response.data.resultat);
+        setDataMission(response.data.resultat);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
+  // Liste critere de l'offre
+  const listeCriteres = (id) => {
+    axios
+      .get(`${ApiURL}/criteres/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Liste criteres:", response.data.resultat);
+        setDataCritere(response.data.resultat);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+
   return (
     <div className="p-10">
       <div className="font-[Sora] mb-4">
@@ -350,17 +284,35 @@ export default function OffresFreelancer() {
                 <h1 className="text-white font-[Sora] font-bold text-[20px]">
                   {l.offre.titre_offre}
                 </h1>
-                <p className="text-gray-500 font-[Sora] font-light text-[15px] uppercase">
-                  {l.offre.recruteur.user.name}
-                </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px]">
                   <CalendarDays className="mr-2" />
-                  {l.created_at}
+                  Publié le : {l.created_at}
                 </p>
                 <p className="flex items-center text-gray-500 font-[Sora] font-light text-[15px] ">
                   <MapPin className="mr-2" />
-                  {l.offre.recruteur.adresse_actuel}
+                  Lieu : {l.offre.recruteur.adresse_actuel}
                 </p>
+                <Chip
+                  onClick={() => handleClikDetail(l.offre.id)}
+                  sx={{
+                    fontFamily: "Sora",
+                    cursor: "pointer",
+                    color: "white",
+                    background: "none",
+                    ":hover": {
+                      background: "none",
+                      color: "oklch(70.7% 0.165 254.624)",
+                      "& .MuiSvgIcon-root": {
+                        color: "oklch(70.7% 0.165 254.624)",
+                      },
+                    },
+                    "& .MuiSvgIcon-root": {
+                      color: "white",
+                    },
+                  }}
+                  icon={<InfoOutlinedIcon />}
+                  label="Voir les détails sur l'offre"
+                />
               </div>
             </div>
             <Button
@@ -377,6 +329,17 @@ export default function OffresFreelancer() {
           </div>
         ))}
       </div>
+
+      {/* Details sur l'offre */}
+      <DetailsOffre
+        data={data}
+        open={openDetail}
+        user={dataUser}
+        recruteur={dataRecruteur}
+        mission={dataMission}
+        critere={dataCritere}
+        handleClose={handleCloseDetail}
+      />
     </div>
   );
 }

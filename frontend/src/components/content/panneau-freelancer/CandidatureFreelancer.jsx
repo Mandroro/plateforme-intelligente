@@ -152,18 +152,6 @@ export default function CandidatureFreelancer() {
                 />
               </ListItem>
             </div>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                fontFamily: "Sora",
-                fontWeight: 300,
-                borderRadius: 50,
-                textTransform: "inherit",
-              }}
-            >
-              Retirer
-            </Button>
           </div>
         </div>
           )) : ""
