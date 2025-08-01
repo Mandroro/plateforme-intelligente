@@ -28,25 +28,25 @@ class OffreController extends Controller
     public function search(Request $request)
     {
         $request->validate([
-            'titre_offre' => 'nullable',
-            'adresse_actuel' => 'nullable',
+            'titre_offre' => 'nullable|string',
+            'adresse_actuel' => 'nullable|string',
         ]);
 
-        if (!$request->filled('poste_travail') && !$request->filled('adresse_actuel')) {
+        if (!$request->filled('titre_offre') && !$request->filled('adresse_actuel')) {
             return response()->json([
                 'message' => 'Veuillez fournir au moins un critère de recherche.',
                 'resultat' => [],
             ], 400);
         }
 
-        $resultat = Offre::with('recruteur.user')
-            ->whereNotNull('secteur_travail')
-            ->whereNotNull('adresse_actuel')
-            ->when($request->filled('secteur_travail'), function ($query) use ($request) {
-                $query->where('secteur_travail', 'LIKE', '%' . $request->secteur_travail . '%');
+        $resultat = Offre::with(['recruteur.user'])
+            ->when($request->filled('titre_offre'), function ($query) use ($request) {
+                $query->where('titre_offre', 'like', '%' . $request->query('titre_offre') . '%');
             })
             ->when($request->filled('adresse_actuel'), function ($query) use ($request) {
-                $query->where('adresse_actuel', 'LIKE', '%' . $request->adresse_actuel . '%');
+                $query->whereHas('recruteur', function ($q) use ($request) {
+                    $q->where('adresse_actuel', 'like', '%' . $request->query('adresse_actuel') . '%');
+                });
             })
             ->get()
             ->map(function ($offre) {
@@ -64,16 +64,18 @@ class OffreController extends Controller
                             'id' => $offre->recruteur->user->id,
                             'email' => $offre->recruteur->user->email,
                             'name' => $offre->recruteur->user->name,
-                        ]
+                        ],
                     ],
                 ];
             });
 
         return response()->json([
-            "message" => "Résultat de recherche récupéré avec succès",
-            "resultat" => $resultat
+            'message' => 'Résultat de recherche récupéré avec succès',
+            'resultat' => $resultat,
         ], 200);
     }
+
+
 
     public function listeOffreById(string $id)
     {
