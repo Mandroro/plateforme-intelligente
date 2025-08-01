@@ -11,11 +11,17 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useApiConfig } from "../../../ApiUrlConfiguration";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import DetailsCandidat from "./modal/DetailsCandidat";
 
 export default function ListeCandidatures() {
   const { ApiURL } = useApiConfig();
   const token = localStorage.getItem("token");
   const [dataCandidature, setDataCandidature] = useState([]);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [dataUser, setDataUser] = useState([]);
+  const [dataFreelancer, setDataFreelancer] = useState([]);
+  const [dataFormation, setDataFormation] = useState([]);
+  const [dataCompetence, setDataCompetence] = useState([]);
 
   useEffect(() => {
     utilisateur();
@@ -68,6 +74,30 @@ export default function ListeCandidatures() {
         console.log("Erreur inattendue:", error);
       });
   };
+
+  // Details sur le profil du candidat
+  const handleClikDetail = (id) => {
+    axios
+      .get(`${ApiURL}/freelancers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setDataUser(response.data.resultat);
+        setDataFreelancer(response.data.resultat.freelancer);
+        setDataFormation(response.data.resultat.freelancer.formations);
+        setDataCompetence(response.data.resultat.freelancer.competences);
+        setOpenDetail(true);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
+  };
+
   return (
     <div className="p-10">
       <div className="font-[Sora] mb-4">
@@ -149,7 +179,9 @@ export default function ListeCandidatures() {
                             </li>
                             <li className="space-x-1">
                               <Chip
-                                onClick={null}
+                                onClick={() =>
+                                  handleClikDetail(d.freelancer_id)
+                                }
                                 sx={{
                                   fontFamily: "Sora",
                                   cursor: "pointer",
@@ -191,6 +223,16 @@ export default function ListeCandidatures() {
             ))
           : ""}
       </div>
+
+      {/* Détails sur le profil du candidat */}
+      <DetailsCandidat
+        open={openDetail}
+        user={dataUser}
+        freelancer={dataFreelancer}
+        formation={dataFormation}
+        competence={dataCompetence}
+        handleClose={handleCloseDetail}
+      />
     </div>
   );
 }

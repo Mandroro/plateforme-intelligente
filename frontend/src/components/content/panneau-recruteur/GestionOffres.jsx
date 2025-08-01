@@ -33,6 +33,7 @@ import axios from "axios";
 import ModifierOffre from "./modal/ModifierOffre";
 import SpecifierOffre from "./modal/SpecifierOffre";
 import { useNavigate } from "react-router";
+import SupprimerOffre from "./modal/SupprimerOffre";
 
 export default function GestionOffres() {
   const { ApiURL } = useApiConfig();
@@ -44,6 +45,7 @@ export default function GestionOffres() {
   const [idOffre, setIdOffre] = useState("");
   const [openSpecifierOffre, setOpenSpecifierOffre] = useState(false);
   const [openModifierOffre, setOpenModifierOffre] = useState(false);
+  const [openSupprimer, setOpenSupprimer] = useState(false);
 
   useEffect(() => {
     recruteur();
@@ -110,6 +112,15 @@ export default function GestionOffres() {
   const voirCandidat = (id) => {
     localStorage.setItem("OFFRE_ID", id);
     redirection('/pannel-recruteur/offres/candidats');
+  }
+
+  // Suppression d'une offre
+  const handleClickSupprimer = (id) => {
+    setIdOffre(id);
+    setOpenSupprimer(true);
+  }
+  const handleCloseSupprimer = () => {
+    setOpenSupprimer(false);
   }
 
   return (
@@ -242,6 +253,7 @@ export default function GestionOffres() {
                                 label="Modifier l'offre"
                               />
                               <Chip
+                              onClick = {() => handleClickSupprimer(d.id)}
                                 sx={{
                                   fontFamily: "Sora",
                                   cursor: "pointer",
@@ -295,6 +307,9 @@ export default function GestionOffres() {
         open={openModifierOffre}
         fermerModifierOffre={fermerModifierOffre}
       />
+
+      {/* Supprimer offre */}
+      <SupprimerOffre id={idOffre} open={openSupprimer} setOpen={setOpenSupprimer} handleClose={handleCloseSupprimer}/>
     </div>
   );
 }

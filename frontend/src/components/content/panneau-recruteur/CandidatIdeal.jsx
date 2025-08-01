@@ -12,6 +12,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ChevronLeft, MapPin } from "lucide-react";
 import { useNavigate } from "react-router";
+import DetailsCandidat from "./modal/DetailsCandidat";
 
 export default function CandidatIdeal() {
   const { ApiURL } = useApiConfig();
@@ -19,6 +20,11 @@ export default function CandidatIdeal() {
   const token = localStorage.getItem("token");
   const redirection = useNavigate();
   const [dataCandidat, setDataCandidat] = useState([]);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [dataUser, setDataUser] = useState([]);
+  const [dataFreelancer, setDataFreelancer] = useState([]);
+  const [dataFormation, setDataFormation] = useState([]);
+  const [dataCompetence, setDataCompetence] = useState([]);
 
   useEffect(() => {
     getListeCandidat();
@@ -70,6 +76,31 @@ export default function CandidatIdeal() {
   const retourOffre = () => {
     localStorage.removeItem("OFFRE_ID");
     redirection("/pannel-recruteur/offres");
+  };
+
+  // Details sur le profil du candidat
+  const handleClikDetail = (id) => {
+    console.log("id =>", id);
+    axios
+      .get(`${ApiURL}/freelancers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.resultat);
+        setDataUser(response.data.resultat);
+        setDataFreelancer(response.data.resultat.freelancer);
+        setDataFormation(response.data.resultat.freelancer.formations);
+        setDataCompetence(response.data.resultat.freelancer.competences);
+        setOpenDetail(true);
+      })
+      .catch((error) => {
+        console.log("Erreur inattendue:", error);
+      });
+  };
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
   };
 
   return (
@@ -167,6 +198,7 @@ export default function CandidatIdeal() {
                     </ListItem>
                   </div>
                   <Button
+                    onClick={() => handleClikDetail(d.freelancer.id)}
                     variant="contained"
                     sx={{
                       fontFamily: "Sora",
@@ -182,6 +214,16 @@ export default function CandidatIdeal() {
             ))
           : ""}
       </div>
+
+      {/* Details sur le profil du candidat */}
+      <DetailsCandidat
+        user={dataUser}
+        freelancer={dataFreelancer}
+        formation={dataFormation}
+        competence={dataCompetence}
+        open={openDetail}
+        handleClose={handleCloseDetail}
+      />
     </div>
   );
 }

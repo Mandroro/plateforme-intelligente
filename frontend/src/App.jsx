@@ -7,8 +7,6 @@ import Accueil from "./components/content/site-vitrine/Accueil";
 import Offres from "./components/content/site-vitrine/Offres";
 import Entreprises from "./components/content/site-vitrine/Entreprises";
 import Candidats from "./components/content/site-vitrine/Candidats";
-import PannelAdmin from "./components/page/PannelAdmin";
-import Dashboard from "./components/content/panneau-admin/Dashboard";
 import PannelFreelancer from "./components/page/PannelFreelancer";
 import OffresFreelancer from "./components/content/panneau-freelancer/OffresFreelancer";
 import CompteFreelancer from "./components/content/panneau-freelancer/CompteFreelancer";
@@ -18,10 +16,6 @@ import CompteRecruteur from "./components/content/panneau-recruteur/CompteRecrut
 import ListeCandidatures from "./components/content/panneau-recruteur/ListeCandidatures";
 import GestionOffres from "./components/content/panneau-recruteur/GestionOffres";
 import DashboardRecruteur from "./components/content/panneau-recruteur/DashboardRecruteur";
-import Compte from "./components/content/panneau-admin/Compte";
-import Freelancer from "./components/content/panneau-admin/Freelancer";
-import Recruteur from "./components/content/panneau-admin/Recruteur";
-import Utilisateur from "./components/content/panneau-admin/Utilisateur";
 import { ApiUrlConfiguration } from "./ApiUrlConfiguration";
 import ProtectedRouter from "./ProtectedRouter";
 import DetailOffre from "./components/content/site-vitrine/content/DetailOffre";
@@ -49,15 +43,6 @@ function App() {
 
         <Route path="/authentification" element={<PageAuthentification />} />
         <Route path="/inscription" element={<PageInscription />} />
-
-        <Route path="/pannel-admin" element={<ProtectedRouter><PannelAdmin /></ProtectedRouter>}>
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="utilisateur" element={<Utilisateur/>} />
-          <Route path="freelancer" element={<Freelancer/>} />
-          <Route path="recruteur" element={<Recruteur/>} />
-          <Route path="compte" element={<Compte/>} />
-        </Route>
 
         <Route path="/pannel-freelancer" element={<ProtectedRouter><PannelFreelancer /></ProtectedRouter>}>
           <Route index element={<Navigate to="dashboard" replace />} />
