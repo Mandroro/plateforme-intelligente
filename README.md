@@ -1,4 +1,16 @@
-## NOM DU PROJET : JobRemote
+## Nom de projet : JobRemote
 
-- Description du projet:
+
+## Description du projet:
 C’est une plateforme innovante qui met en relation de jeunes talents (freelancers) à la recherche de nouvelles opportunités de travail à distance avec des entreprises (recruteurs) en quête de profils qualifiés. Grâce à l’utilisation de l’intelligence artificielle, elle réalise un matching automatique afin de proposer aux freelancers les offres les plus adaptées à leur profil, et aux recruteurs les candidats idéaux pour leurs offres publiées.
+
+## Technologies utilisées
+
+- PHP 8.2
+- Laravel 10
+- ReactJS
+- Tailwind CSS
+- Material UI
+- MySQL
+
+## Installation
