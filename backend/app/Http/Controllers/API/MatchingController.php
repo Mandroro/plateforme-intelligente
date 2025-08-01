@@ -146,7 +146,7 @@ class MatchingController extends Controller
 
             return [
                 'freelancer' => [
-                    'id'         => $freelancer->id,
+                    'id'         => $freelancer->user->id,
                     'nom'        => $freelancer->user->name,
                     'specialite' => $freelancer->poste_travail,
                     'adresse'    => $freelancer->adresse_actuel,

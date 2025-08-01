@@ -83,7 +83,7 @@ class CandidatureController extends Controller
             ->map(function ($c) {
                 return [
                     'candidature_id' => $c->id,
-                    'freelancer_id' => $c->freelancer->id,
+                    'freelancer_id' => $c->freelancer->user->id,
                     'freelancer_nom' => $c->freelancer->user->name,
                     'offre_id' => $c->offre->id,
                     'offre_titre' => $c->offre->titre_offre,
