@@ -22,3 +22,16 @@ C’est une plateforme innovante qui met en relation de jeunes talents (freelanc
 - MySQL
 
 ## Installation
+
+# Cloner le dépôt
+git clone https://github.com/Mandroro/plateforme-intelligente
+
+# Backend Laravel
+cd plateforme-intelligente/backend
+composer install
+php artisan migrate
+
+# Frontend React
+cd plateforme-intelligente/frontend
+npm install
+npm run dev
